@@ -95,7 +95,7 @@ class AppTheme {
       elevation: 0,
       backgroundColor: appColors.surfaceColor,
       selectedItemColor: appColors.primary,
-      unselectedItemColor: appColors.onSurface?.withOpacity(0.5),
+      unselectedItemColor: appColors.onSurface?.withValues(alpha: 0.5),
       showSelectedLabels: false,
       showUnselectedLabels: false,
       type: BottomNavigationBarType.fixed,

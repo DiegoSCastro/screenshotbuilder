@@ -54,7 +54,7 @@ class CustomException implements Exception {
     }
   }
 
-  String _handleError(statusCode) {
+  String _handleError(int? statusCode) {
     switch (statusCode) {
       case 400:
         return 'An error occured';
@@ -72,5 +72,3 @@ class CustomException implements Exception {
   @override
   String toString() => message.toString();
 }
-
-

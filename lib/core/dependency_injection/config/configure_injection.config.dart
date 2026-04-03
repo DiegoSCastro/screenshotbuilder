@@ -15,6 +15,8 @@ import 'package:injectable/injectable.dart' as _i526;
 import 'package:screenshotbuilder/core/dependency_injection/modules/dio_module.dart'
     as _i288;
 import 'package:screenshotbuilder/core/network/network_client.dart' as _i97;
+import 'package:screenshotbuilder/features/editor/presentation/blocs/editor_bloc/editor_bloc.dart'
+    as _i183;
 import 'package:screenshotbuilder/features/sample/data/data_sources/sample_datasource.dart'
     as _i923;
 import 'package:screenshotbuilder/features/sample/data/repositories_impl/sample_repository_impl.dart'
@@ -36,6 +38,7 @@ extension GetItInjectableX on _i174.GetIt {
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final dioModule = _$DioModule();
+    gh.factory<_i183.EditorBloc>(() => _i183.EditorBloc());
     gh.lazySingleton<_i361.Dio>(() => dioModule.dioInstance);
     gh.lazySingleton<_i97.NetworkClient>(
       () => _i97.NetworkClient(gh<_i361.Dio>()),
