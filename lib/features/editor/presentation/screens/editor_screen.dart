@@ -59,18 +59,15 @@ class EditorScreen extends StatelessWidget {
         color: appColors?.appBarColor,
         border: Border(
           bottom: BorderSide(
-            color: appColors?.contentBorder?.withValues(alpha: 0.1) ??
+            color:
+                appColors?.contentBorder?.withValues(alpha: 0.1) ??
                 Colors.grey.shade200,
           ),
         ),
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.screenshot_monitor,
-            color: appColors?.primary,
-            size: 22,
-          ),
+          Icon(Icons.screenshot_monitor, color: appColors?.primary, size: 22),
           const SizedBox(width: 8),
           Text(
             'Screenshot Builder',
@@ -102,11 +99,13 @@ class EditorScreen extends StatelessWidget {
 
     return Container(
       width: 280,
+      height: double.infinity,
       decoration: BoxDecoration(
         color: appColors?.appBarColor,
         border: Border(
           right: BorderSide(
-            color: appColors?.contentBorder?.withValues(alpha: 0.1) ??
+            color:
+                appColors?.contentBorder?.withValues(alpha: 0.1) ??
                 Colors.grey.shade200,
           ),
         ),
@@ -119,8 +118,7 @@ class EditorScreen extends StatelessWidget {
             children: [
               StoreSelector(
                 selected: state.storeType,
-                onChanged: (store) =>
-                    bloc.add(EditorEvent.selectStore(store)),
+                onChanged: (store) => bloc.add(EditorEvent.selectStore(store)),
               ),
               const SizedBox(height: 20),
               TemplateSelector(
@@ -134,16 +132,12 @@ class EditorScreen extends StatelessWidget {
                 maxTexts: maxTexts,
                 selectedImagePath: state.selectedImagePath,
                 onTextChanged: (index, text) =>
-                    bloc.add(EditorEvent.updateText(
-                  index: index,
-                  text: text,
-                )),
+                    bloc.add(EditorEvent.updateText(index: index, text: text)),
               ),
               const SizedBox(height: 20),
               BackgroundEditor(
                 background: state.background,
-                onChanged: (bg) =>
-                    bloc.add(EditorEvent.updateBackground(bg)),
+                onChanged: (bg) => bloc.add(EditorEvent.updateBackground(bg)),
               ),
               const SizedBox(height: 20),
               AppearanceControls(
@@ -209,7 +203,8 @@ class EditorScreen extends StatelessWidget {
         color: appColors?.appBarColor,
         border: Border(
           left: BorderSide(
-            color: appColors?.contentBorder?.withValues(alpha: 0.1) ??
+            color:
+                appColors?.contentBorder?.withValues(alpha: 0.1) ??
                 Colors.grey.shade200,
           ),
         ),
@@ -221,16 +216,15 @@ class EditorScreen extends StatelessWidget {
           webImageBytes: state.webImageBytes,
           webImageDisplayNames: state.webImageDisplayNames,
           selectedIndex: state.selectedImageIndex,
-          onSelect: (index) =>
-              bloc.add(EditorEvent.selectImage(index)),
-          onRemove: (index) =>
-              bloc.add(EditorEvent.removeImage(index)),
-          onAdd: (paths, {webImageBytes, webImageDisplayNames}) =>
-              bloc.add(EditorEvent.addImages(
-                paths: paths,
-                webImageBytes: webImageBytes,
-                webImageDisplayNames: webImageDisplayNames,
-              )),
+          onSelect: (index) => bloc.add(EditorEvent.selectImage(index)),
+          onRemove: (index) => bloc.add(EditorEvent.removeImage(index)),
+          onAdd: (paths, {webImageBytes, webImageDisplayNames}) => bloc.add(
+            EditorEvent.addImages(
+              paths: paths,
+              webImageBytes: webImageBytes,
+              webImageDisplayNames: webImageDisplayNames,
+            ),
+          ),
         ),
       ),
     );
@@ -252,7 +246,8 @@ class EditorScreen extends StatelessWidget {
             color: appColors?.appBarColor,
             border: Border(
               top: BorderSide(
-                color: appColors?.contentBorder?.withValues(alpha: 0.1) ??
+                color:
+                    appColors?.contentBorder?.withValues(alpha: 0.1) ??
                     Colors.grey.shade200,
               ),
             ),
@@ -283,16 +278,14 @@ class EditorScreen extends StatelessWidget {
                   icon: const Icon(Icons.download, size: 18),
                   label: const Text(
                     'Generate Screenshots',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: appColors?.primary,
                     foregroundColor: Colors.white,
-                    disabledBackgroundColor:
-                        appColors?.primary?.withValues(alpha: 0.3),
+                    disabledBackgroundColor: appColors?.primary?.withValues(
+                      alpha: 0.3,
+                    ),
                     disabledForegroundColor: Colors.white54,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -318,8 +311,7 @@ class EditorScreen extends StatelessWidget {
       return;
     }
 
-    final template =
-        TemplateRegistry.getByIndex(state.selectedTemplateIndex);
+    final template = TemplateRegistry.getByIndex(state.selectedTemplateIndex);
 
     ExportDialog.show(
       context,

@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/extensions/theme_ext.dart';
-import '../../../../utils/image_utils.dart';
 
 class TextEditorPanel extends StatefulWidget {
   final List<String> texts;
@@ -86,30 +85,12 @@ class _TextEditorPanelState extends State<TextEditorPanel> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Text(
-              'TEXTS',
-              style: context.labelSmall(
-                color: appColors?.subtext,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            if (hasImage) ...[
-              const SizedBox(width: 6),
-              Expanded(
-                child: Text(
-                  ImageUtils.getFileName(widget.selectedImagePath!),
-                  style: context.labelSmall(
-                    color: appColors?.primary?.withValues(alpha: 0.7),
-                    fontWeight: FontWeight.w500,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ],
+        Text(
+          'TEXTS',
+          style: context.labelSmall(
+            color: appColors?.subtext,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         if (!hasImage) ...[
           const SizedBox(height: 8),

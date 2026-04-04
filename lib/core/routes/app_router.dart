@@ -13,6 +13,8 @@ class AppRouter {
       ),
     ],
     errorBuilder: (context, state) =>
-        const Scaffold(body: Center(child: Text('Something Error'))),
+        const Scaffold(
+          body: Center(child: Text('Something went wrong')),
+        ),
   );
 }

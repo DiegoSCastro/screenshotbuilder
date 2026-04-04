@@ -37,9 +37,11 @@ class BackgroundEditor extends StatelessWidget {
               isSelected: isGradient,
               onTap: () {
                 if (!isGradient) {
-                  onChanged(const BackgroundConfig(
-                    gradientColors: [Color(0xFF667EEA), Color(0xFF764BA2)],
-                  ));
+                  onChanged(
+                    const BackgroundConfig(
+                      gradientColors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                    ),
+                  );
                 }
               },
               primaryColor: appColors?.primary,
@@ -52,9 +54,9 @@ class BackgroundEditor extends StatelessWidget {
               isSelected: !isGradient,
               onTap: () {
                 if (isGradient) {
-                  onChanged(const BackgroundConfig(
-                    solidColor: Color(0xFF1a1a2e),
-                  ));
+                  onChanged(
+                    const BackgroundConfig(solidColor: Color(0xFF1a1a2e)),
+                  );
                 }
               },
               primaryColor: appColors?.primary,
@@ -64,54 +66,85 @@ class BackgroundEditor extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
-        if (isGradient) _buildGradientEditor(context) else _buildSolidEditor(context),
+        if (isGradient)
+          _buildGradientEditor(context)
+        else
+          _buildSolidEditor(context),
       ],
     );
   }
 
   Widget _buildGradientEditor(BuildContext context) {
     final colors = background.gradientColors!;
-    return Row(
-      children: [
-        Expanded(
-          child: _ColorButton(
-            label: 'Start',
-            color: colors[0],
-            onTap: () async {
-              final color = await ColorPickerDialog.show(context, colors[0]);
-              if (color != null) {
-                onChanged(BackgroundConfig(
-                  gradientColors: [color, colors[1]],
-                ));
-              }
-            },
+    final borderColor =
+        context.appColors?.contentBorder?.withValues(alpha: 0.2) ?? Colors.grey;
+
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _GradientStopTile(
+                  label: 'Start',
+                  color: colors[0],
+                  borderColor: borderColor,
+                  onTap: () async {
+                    final color = await ColorPickerDialog.show(
+                      context,
+                      colors[0],
+                    );
+                    if (color != null) {
+                      onChanged(
+                        BackgroundConfig(gradientColors: [color, colors[1]]),
+                      );
+                    }
+                  },
+                ),
+                const SizedBox(height: 10),
+                _GradientStopTile(
+                  label: 'End',
+                  color: colors[1],
+                  borderColor: borderColor,
+                  onTap: () async {
+                    final color = await ColorPickerDialog.show(
+                      context,
+                      colors[1],
+                    );
+                    if (color != null) {
+                      onChanged(
+                        BackgroundConfig(gradientColors: [colors[0], color]),
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
-        ),
-        const SizedBox(width: 8),
-        Container(
-          height: 40,
-          width: 40,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            gradient: LinearGradient(colors: colors),
+          const SizedBox(width: 10),
+          DecoratedBox(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: colors,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: const SizedBox(width: 36),
           ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: _ColorButton(
-            label: 'End',
-            color: colors[1],
-            onTap: () async {
-              final color = await ColorPickerDialog.show(context, colors[1]);
-              if (color != null) {
-                onChanged(BackgroundConfig(
-                  gradientColors: [colors[0], color],
-                ));
-              }
-            },
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -182,6 +215,76 @@ class _ModeChip extends StatelessWidget {
   }
 }
 
+class _GradientStopTile extends StatelessWidget {
+  final String label;
+  final Color color;
+  final Color borderColor;
+  final VoidCallback onTap;
+
+  const _GradientStopTile({
+    required this.label,
+    required this.color,
+    required this.borderColor,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final appColors = context.appColors;
+    final onSurface = appColors?.onSurface?.withValues(alpha: 0.75);
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: borderColor),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: onSurface,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Container(
+                width: 80,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.white24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.12),
+                      blurRadius: 4,
+                      offset: const Offset(0, 1),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _ColorButton extends StatelessWidget {
   final String label;
   final Color color;
@@ -202,7 +305,8 @@ class _ColorButton extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: context.appColors?.contentBorder?.withValues(alpha: 0.2) ??
+            color:
+                context.appColors?.contentBorder?.withValues(alpha: 0.2) ??
                 Colors.grey,
           ),
         ),
@@ -227,11 +331,7 @@ class _ColorButton extends StatelessWidget {
                 ),
               ),
             ),
-            Icon(
-              Icons.edit,
-              size: 14,
-              color: context.appColors?.subtext,
-            ),
+            Icon(Icons.edit, size: 14, color: context.appColors?.subtext),
           ],
         ),
       ),

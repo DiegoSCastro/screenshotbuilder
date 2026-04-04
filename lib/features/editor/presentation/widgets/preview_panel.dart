@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -9,7 +10,7 @@ import '../../../../models/export_config.dart';
 import '../../../../templates/base_template.dart';
 import '../../../../utils/image_utils.dart';
 
-class PreviewPanel extends StatelessWidget {
+class PreviewPanel extends StatefulWidget {
   final BaseTemplate template;
   final List<String> imagePaths;
   final Map<String, Uint8List> webImageBytes;
@@ -47,24 +48,94 @@ class PreviewPanel extends StatelessWidget {
     required this.onPreviewTabletChanged,
   });
 
+  @override
+  State<PreviewPanel> createState() => _PreviewPanelState();
+}
+
+class _PreviewPanelState extends State<PreviewPanel> {
+  final TransformationController _transformController = TransformationController();
+
+  static const double _minScale = 0.05;
+  static const double _maxScale = 4.0;
+
+  /// Last [InteractiveViewer] viewport size (updated in [LayoutBuilder]).
+  Size _viewportSize = Size.zero;
+
+  @override
+  void dispose() {
+    _transformController.dispose();
+    super.dispose();
+  }
+
+  double get _aspectRatio {
+    final sizes = ExportConfig.sizesForStore(widget.storeType);
+    final activeSize = widget.previewTablet
+        ? sizes.firstWhere((s) => s.isTablet, orElse: () => sizes.first)
+        : sizes.firstWhere((s) => !s.isTablet, orElse: () => sizes.first);
+    return activeSize.width / activeSize.height;
+  }
+
   List<String> _textsFor(String path) {
-    final texts = textsPerImage[path];
-    if (texts == null) return List.filled(maxTexts, '');
-    if (texts.length < maxTexts) {
-      return [...texts, ...List.filled(maxTexts - texts.length, '')];
+    final texts = widget.textsPerImage[path];
+    if (texts == null) return List.filled(widget.maxTexts, '');
+    if (texts.length < widget.maxTexts) {
+      return [...texts, ...List.filled(widget.maxTexts - texts.length, '')];
     }
     return texts;
+  }
+
+  /// Same geometry as [_buildPreviewContent] (logical width × height of the grid).
+  Size _contentLogicalSize(double viewportWidth) {
+    const spacing = 12.0;
+    const paddingH = 4.0;
+    final paths = widget.imagePaths;
+    final count = paths.isEmpty ? 1 : paths.length;
+    final cols =
+        paths.isEmpty ? 1 : _columnsFor(paths.length, viewportWidth);
+    final rows = (count + cols - 1) ~/ cols;
+    final innerW = viewportWidth - paddingH * 2;
+    final cellW = cols > 0 ? (innerW - spacing * (cols - 1)) / cols : innerW;
+    final cellH = cellW / _aspectRatio;
+    final contentHeight =
+        rows * cellH + (rows > 1 ? (rows - 1) * spacing : 0);
+    return Size(viewportWidth, contentHeight);
+  }
+
+  void _fitToView() {
+    final vw = _viewportSize.width;
+    final vh = _viewportSize.height;
+    if (vw <= 0 || vh <= 0) return;
+
+    final content = _contentLogicalSize(vw);
+    final cw = content.width;
+    final ch = content.height;
+    if (cw <= 0 || ch <= 0) return;
+
+    var scale = math.min(vw / cw, vh / ch);
+    scale = scale.clamp(_minScale, _maxScale);
+
+    final tx = (vw - cw * scale) / 2;
+    final ty = (vh - ch * scale) / 2;
+
+    _transformController.value = Matrix4(
+      scale, 0, 0, 0,
+      0, scale, 0, 0,
+      0, 0, 1, 0,
+      tx, ty, 0, 1,
+    );
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     final appColors = context.appColors;
-    final sizes = ExportConfig.sizesForStore(storeType);
-    final activeSize = previewTablet
+    final sizes = ExportConfig.sizesForStore(widget.storeType);
+    final activeSize = widget.previewTablet
         ? sizes.firstWhere((s) => s.isTablet, orElse: () => sizes.first)
         : sizes.firstWhere((s) => !s.isTablet, orElse: () => sizes.first);
     final aspectRatio = activeSize.width / activeSize.height;
     final hasTabletSize = sizes.any((s) => s.isTablet);
+    final primary = appColors?.primary ?? Colors.blue;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -79,7 +150,7 @@ class PreviewPanel extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            if (imagePaths.isNotEmpty) ...[
+            if (widget.imagePaths.isNotEmpty) ...[
               const SizedBox(width: 8),
               Container(
                 padding:
@@ -89,7 +160,7 @@ class PreviewPanel extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(
-                  '${selectedIndex + 1}/${imagePaths.length}',
+                  '${widget.selectedIndex + 1}/${widget.imagePaths.length}',
                   style: context.labelSmall(
                     color: appColors?.primary,
                     fontWeight: FontWeight.w600,
@@ -101,17 +172,55 @@ class PreviewPanel extends StatelessWidget {
               const SizedBox(width: 12),
               _buildPreviewModeToggle(context),
             ],
+            const SizedBox(width: 8),
+            Tooltip(
+              message: 'Fit entire preview in the viewport',
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: _fitToView,
+                  borderRadius: BorderRadius.circular(8),
+                  child: Padding(
+                    padding: const EdgeInsets.all(6),
+                    child: Icon(
+                      Icons.fit_screen,
+                      size: 20,
+                      color: primary,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 8),
         Expanded(
-          child: imagePaths.isEmpty
-              ? _buildEmptyPreview(context, aspectRatio)
-              : _buildPreviewGrid(context, aspectRatio),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              _viewportSize = Size(constraints.maxWidth, constraints.maxHeight);
+              final contentWidth = constraints.maxWidth;
+              return ClipRect(
+                child: InteractiveViewer(
+                  transformationController: _transformController,
+                  minScale: _minScale,
+                  maxScale: _maxScale,
+                  boundaryMargin: const EdgeInsets.all(double.infinity),
+                  constrained: false,
+                  clipBehavior: Clip.hardEdge,
+                  trackpadScrollCausesScale: true,
+                  child: _buildPreviewContent(
+                    context,
+                    aspectRatio,
+                    contentWidth,
+                  ),
+                ),
+              );
+            },
+          ),
         ),
         const SizedBox(height: 6),
         Text(
-          '${activeSize.width.toInt()} x ${activeSize.height.toInt()} — ${storeType.displayName}${previewTablet ? ' (Tablet)' : ''}',
+          '${activeSize.width.toInt()} x ${activeSize.height.toInt()} — ${widget.storeType.displayName}${widget.previewTablet ? ' (Tablet)' : ''}',
           style: context.labelSmall(
             color: appColors?.subtext?.withValues(alpha: 0.5),
           ),
@@ -140,17 +249,17 @@ class PreviewPanel extends StatelessWidget {
             context,
             icon: Icons.phone_iphone,
             label: 'Phone',
-            isActive: !previewTablet,
+            isActive: !widget.previewTablet,
             primary: primary,
-            onTap: () => onPreviewTabletChanged(false),
+            onTap: () => widget.onPreviewTabletChanged(false),
           ),
           _buildToggleButton(
             context,
             icon: Icons.tablet_mac,
             label: 'Tablet',
-            isActive: previewTablet,
+            isActive: widget.previewTablet,
             primary: primary,
-            onTap: () => onPreviewTabletChanged(true),
+            onTap: () => widget.onPreviewTabletChanged(true),
           ),
         ],
       ),
@@ -196,68 +305,70 @@ class PreviewPanel extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyPreview(BuildContext context, double aspectRatio) {
-    return Center(
-      child: AspectRatio(
-        aspectRatio: aspectRatio,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final size =
-                Size(constraints.maxWidth, constraints.maxHeight);
-            return _buildScreenshotCard(
-              context: context,
-              size: size,
-              imagePath: null,
-              imageBytes: null,
-              texts: List.filled(maxTexts, ''),
-              isSelected: false,
-              index: -1,
+  Widget _buildPreviewContent(
+    BuildContext context,
+    double aspectRatio,
+    double viewportWidth,
+  ) {
+    const spacing = 12.0;
+    const paddingH = 4.0;
+
+    final paths = widget.imagePaths;
+    final count = paths.isEmpty ? 1 : paths.length;
+    final cols = paths.isEmpty
+        ? 1
+        : _columnsFor(paths.length, viewportWidth);
+    final rows = (count + cols - 1) ~/ cols;
+
+    final innerW = viewportWidth - paddingH * 2;
+    final cellW = cols > 0 ? (innerW - spacing * (cols - 1)) / cols : innerW;
+    final cellH = cellW / aspectRatio;
+    final contentHeight =
+        rows * cellH + (rows > 1 ? (rows - 1) * spacing : 0);
+
+    return SizedBox(
+      width: viewportWidth,
+      height: contentHeight,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: paddingH),
+        child: GridView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: cols,
+            crossAxisSpacing: spacing,
+            mainAxisSpacing: spacing,
+            childAspectRatio: aspectRatio,
+          ),
+          itemCount: count,
+          itemBuilder: (context, index) {
+            if (paths.isEmpty) {
+              return _buildScreenshotCard(
+                context: context,
+                size: Size(cellW, cellH),
+                imagePath: null,
+                imageBytes: null,
+                texts: List.filled(widget.maxTexts, ''),
+                isSelected: false,
+                index: -1,
+              );
+            }
+            final path = paths[index];
+            return GestureDetector(
+              onTap: () => widget.onSelect(index),
+              child: _buildScreenshotCard(
+                context: context,
+                size: Size(cellW, cellH),
+                imagePath: path,
+                imageBytes: widget.webImageBytes[path],
+                texts: _textsFor(path),
+                isSelected: index == widget.selectedIndex,
+                index: index,
+              ),
             );
           },
         ),
       ),
-    );
-  }
-
-  Widget _buildPreviewGrid(BuildContext context, double aspectRatio) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final cols = _columnsFor(imagePaths.length, constraints.maxWidth);
-        return GridView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 4),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: cols,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-            childAspectRatio: aspectRatio,
-          ),
-          itemCount: imagePaths.length,
-          itemBuilder: (context, index) {
-            final path = imagePaths[index];
-            final texts = _textsFor(path);
-            return GestureDetector(
-              onTap: () => onSelect(index),
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final size = Size(
-                    constraints.maxWidth,
-                    constraints.maxHeight,
-                  );
-                  return _buildScreenshotCard(
-                    context: context,
-                    size: size,
-                    imagePath: path,
-                    imageBytes: webImageBytes[path],
-                    texts: texts,
-                    isSelected: index == selectedIndex,
-                    index: index,
-                  );
-                },
-              ),
-            );
-          },
-        );
-      },
     );
   }
 
@@ -295,17 +406,17 @@ class PreviewPanel extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: template.build(
+            child: widget.template.build(
               size: size,
               texts: texts,
               imagePath: imagePath,
               imageBytes: imageBytes,
-              background: background,
-              textScale: textScale,
-              deviceFrame: deviceFrame,
-              imageSizeRatio: imageSizeRatio,
-              textColor: textColor,
-              isTablet: previewTablet,
+              background: widget.background,
+              textScale: widget.textScale,
+              deviceFrame: widget.deviceFrame,
+              imageSizeRatio: widget.imageSizeRatio,
+              textColor: widget.textColor,
+              isTablet: widget.previewTablet,
             ),
           ),
           if (index >= 0)
@@ -323,7 +434,7 @@ class PreviewPanel extends StatelessWidget {
                   imagePath != null
                       ? ImageUtils.displayNameFor(
                           imagePath,
-                          webImageDisplayNames,
+                          widget.webImageDisplayNames,
                         )
                       : '',
                   style: const TextStyle(

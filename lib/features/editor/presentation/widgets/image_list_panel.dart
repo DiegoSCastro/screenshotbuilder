@@ -176,6 +176,7 @@ class ImageListPanel extends StatelessWidget {
                               ),
                             ),
                             IconButton(
+                              tooltip: 'Remove image',
                               icon: Icon(
                                 Icons.close,
                                 size: 16,
