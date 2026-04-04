@@ -111,5 +111,9 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
     on<_UpdateTextColor>((event, emit) {
       emit(state.copyWith(textColor: event.color));
     });
+
+    on<_TogglePreviewTablet>((event, emit) {
+      emit(state.copyWith(previewTablet: event.value));
+    });
   }
 }

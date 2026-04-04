@@ -22,4 +22,6 @@ class EditorEvent with _$EditorEvent {
   const factory EditorEvent.updateImageSizeRatio(double ratio) =
       _UpdateImageSizeRatio;
   const factory EditorEvent.updateTextColor(Color color) = _UpdateTextColor;
+  const factory EditorEvent.togglePreviewTablet(bool value) =
+      _TogglePreviewTablet;
 }

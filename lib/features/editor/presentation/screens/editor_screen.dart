@@ -188,7 +188,10 @@ class EditorScreen extends StatelessWidget {
           deviceFrame: state.deviceFrameStyle,
           imageSizeRatio: state.imageSizeRatio,
           textColor: state.textColor,
+          previewTablet: state.previewTablet,
           onSelect: (index) => bloc.add(EditorEvent.selectImage(index)),
+          onPreviewTabletChanged: (value) =>
+              bloc.add(EditorEvent.togglePreviewTablet(value)),
         ),
       ),
     );

@@ -28,6 +28,7 @@ class ScreenshotRenderer {
     final savedPaths = <String>[];
     final total = sizes.length * images.length;
     int current = 0;
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
 
     final overlay = Overlay.of(context);
 
@@ -37,10 +38,6 @@ class ScreenshotRenderer {
     }
 
     for (final size in sizes) {
-      // Tablet sizes crop from top to fit the wider aspect ratio
-      final imageAlignment =
-          size.isTablet ? Alignment.topCenter : Alignment.center;
-
       for (int i = 0; i < images.length; i++) {
         final imagePath = images[i];
         final texts = _textsForImage(imagePath, textsPerImage, maxTexts);
@@ -56,10 +53,10 @@ class ScreenshotRenderer {
           deviceFrame: deviceFrame,
           imageSizeRatio: imageSizeRatio,
           textColor: textColor,
-          imageAlignment: imageAlignment,
+          isTablet: size.isTablet,
         );
 
-        final fileName = '${size.name}_screenshot_$i.png';
+        final fileName = '${size.name}_screenshot_${i}_$timestamp.png';
         final filePath = '$outputDir/$fileName';
         await File(filePath).writeAsBytes(bytes);
         savedPaths.add(filePath);
@@ -96,7 +93,7 @@ class ScreenshotRenderer {
     required DeviceFrameStyle deviceFrame,
     required double imageSizeRatio,
     required Color textColor,
-    required Alignment imageAlignment,
+    required bool isTablet,
   }) async {
     const double maxLogicalSize = 800.0;
     final double scale;
@@ -135,7 +132,7 @@ class ScreenshotRenderer {
                 deviceFrame: deviceFrame,
                 imageSizeRatio: imageSizeRatio,
                 textColor: textColor,
-                imageAlignment: imageAlignment,
+                isTablet: isTablet,
               ),
             ),
           ),

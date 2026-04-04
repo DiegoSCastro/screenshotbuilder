@@ -18,7 +18,7 @@ abstract class BaseTemplate {
     DeviceFrameStyle deviceFrame = DeviceFrameStyle.none,
     double imageSizeRatio = 0.8,
     Color textColor = Colors.white,
-    Alignment imageAlignment = Alignment.center,
+    bool isTablet = false,
   });
 
   Decoration buildBackgroundDecoration(BackgroundConfig background) {
@@ -40,7 +40,8 @@ abstract class BaseTemplate {
     String? imagePath, {
     BoxFit fit = BoxFit.contain,
     DeviceFrameStyle deviceFrame = DeviceFrameStyle.none,
-    Alignment alignment = Alignment.center,
+    double cropBottomFraction = 0.0,
+    double borderRadius = 0.0,
   }) {
     Widget image;
     if (imagePath == null || imagePath.isEmpty) {
@@ -51,10 +52,12 @@ abstract class BaseTemplate {
         ),
       );
     } else {
+      final useCover =
+          deviceFrame != DeviceFrameStyle.none || cropBottomFraction > 0;
       image = Image.file(
         File(imagePath),
-        fit: deviceFrame != DeviceFrameStyle.none ? BoxFit.cover : fit,
-        alignment: alignment,
+        fit: useCover ? BoxFit.cover : fit,
+        alignment: Alignment.topCenter,
         errorBuilder: (_, _, _) => Container(
           color: Colors.black12,
           child: const Center(
@@ -62,6 +65,49 @@ abstract class BaseTemplate {
                 Icon(Icons.broken_image, size: 48, color: Colors.white38),
           ),
         ),
+      );
+    }
+
+    if (cropBottomFraction > 0 && imagePath != null && imagePath.isNotEmpty) {
+      final originalImage = image;
+      image = LayoutBuilder(
+        builder: (context, constraints) {
+          if (!constraints.hasBoundedHeight) {
+            if (borderRadius > 0) {
+              return ClipRRect(
+                borderRadius: BorderRadius.circular(borderRadius),
+                child: originalImage,
+              );
+            }
+            return originalImage;
+          }
+          final expandedHeight =
+              constraints.maxHeight / (1 - cropBottomFraction);
+          Widget content = SizedBox(
+            width: constraints.maxWidth,
+            height: constraints.maxHeight,
+            child: ClipRect(
+              child: OverflowBox(
+                alignment: Alignment.topCenter,
+                maxWidth: constraints.maxWidth,
+                maxHeight: expandedHeight,
+                child: originalImage,
+              ),
+            ),
+          );
+          if (borderRadius > 0) {
+            content = ClipRRect(
+              borderRadius: BorderRadius.circular(borderRadius),
+              child: content,
+            );
+          }
+          return content;
+        },
+      );
+    } else if (borderRadius > 0) {
+      image = ClipRRect(
+        borderRadius: BorderRadius.circular(borderRadius),
+        child: image,
       );
     }
 

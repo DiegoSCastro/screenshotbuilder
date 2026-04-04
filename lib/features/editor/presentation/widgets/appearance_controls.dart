@@ -28,6 +28,11 @@ class AppearanceControls extends StatelessWidget {
     required this.onTextColorChanged,
   });
 
+  static const _textPresetColors = [
+    Colors.white,
+    Colors.black,
+  ];
+
   @override
   Widget build(BuildContext context) {
     final appColors = context.appColors;
@@ -45,55 +50,9 @@ class AppearanceControls extends StatelessWidget {
         ),
         const SizedBox(height: 10),
 
-        // Text Color
-        Row(
-          children: [
-            Text(
-              'Text Color',
-              style: TextStyle(
-                fontSize: 12,
-                color: appColors?.onSurface?.withValues(alpha: 0.7),
-              ),
-            ),
-            const Spacer(),
-            GestureDetector(
-              onTap: () async {
-                final color =
-                    await ColorPickerDialog.show(context, textColor);
-                if (color != null) onTextColorChanged(color);
-              },
-              child: Container(
-                width: 28,
-                height: 28,
-                decoration: BoxDecoration(
-                  color: textColor,
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(
-                    color: appColors?.contentBorder?.withValues(alpha: 0.3) ??
-                        Colors.grey,
-                    width: 1.5,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: textColor.withValues(alpha: 0.3),
-                      blurRadius: 4,
-                    ),
-                  ],
-                ),
-                child: Icon(
-                  Icons.edit,
-                  size: 12,
-                  color: textColor.computeLuminance() > 0.5
-                      ? Colors.black54
-                      : Colors.white70,
-                ),
-              ),
-            ),
-          ],
-        ),
+        _buildTextColorSection(context, appColors, primary),
         const SizedBox(height: 12),
 
-        // Text Size
         _buildSliderRow(
           context: context,
           label: 'Text Size',
@@ -110,7 +69,6 @@ class AppearanceControls extends StatelessWidget {
         ),
         const SizedBox(height: 12),
 
-        // Image Size
         _buildSliderRow(
           context: context,
           label: 'Image Size',
@@ -127,7 +85,6 @@ class AppearanceControls extends StatelessWidget {
         ),
         const SizedBox(height: 12),
 
-        // Device Frame
         Row(
           children: [
             Expanded(
@@ -161,6 +118,78 @@ class AppearanceControls extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTextColorSection(
+    BuildContext context,
+    dynamic appColors,
+    Color primary,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              'Text Color',
+              style: TextStyle(
+                fontSize: 12,
+                color: appColors?.onSurface?.withValues(alpha: 0.7),
+              ),
+            ),
+            const Spacer(),
+            GestureDetector(
+              onTap: () async {
+                final color =
+                    await ColorPickerDialog.show(context, textColor);
+                if (color != null) onTextColorChanged(color);
+              },
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.palette, size: 12, color: primary),
+                    const SizedBox(width: 4),
+                    Text(
+                      'Custom',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: primary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 6,
+          runSpacing: 6,
+          children: _textPresetColors.map((color) {
+            final isSelected =
+                color.toARGB32() == textColor.toARGB32();
+            return _ColorCircle(
+              color: color,
+              isSelected: isSelected,
+              primary: primary,
+              borderColor:
+                  appColors?.contentBorder?.withValues(alpha: 0.3) ??
+                      Colors.grey,
+              onTap: () => onTextColorChanged(color),
+            );
+          }).toList(),
         ),
       ],
     );
@@ -239,6 +268,58 @@ class AppearanceControls extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+}
+
+class _ColorCircle extends StatelessWidget {
+  final Color color;
+  final bool isSelected;
+  final Color primary;
+  final Color borderColor;
+  final VoidCallback onTap;
+
+  const _ColorCircle({
+    required this.color,
+    required this.isSelected,
+    required this.primary,
+    required this.borderColor,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 26,
+        height: 26,
+        decoration: BoxDecoration(
+          color: color,
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: isSelected ? primary : borderColor,
+            width: isSelected ? 2.5 : 1,
+          ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: primary.withValues(alpha: 0.4),
+                    blurRadius: 6,
+                  ),
+                ]
+              : null,
+        ),
+        child: isSelected
+            ? Icon(
+                Icons.check,
+                size: 13,
+                color: color.computeLuminance() > 0.5
+                    ? Colors.black87
+                    : Colors.white,
+              )
+            : null,
+      ),
     );
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 @immutable
 class AppColors extends ThemeExtension<AppColors> {
-  //TODO: Add branding based theme colors
   final Color? primary;
   final Color? secondary;
 

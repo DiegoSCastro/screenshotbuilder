@@ -24,7 +24,7 @@ class Template1 extends BaseTemplate {
     DeviceFrameStyle deviceFrame = DeviceFrameStyle.none,
     double imageSizeRatio = 0.8,
     Color textColor = Colors.white,
-    Alignment imageAlignment = Alignment.center,
+    bool isTablet = false,
   }) {
     final titleText = texts.isNotEmpty ? texts[0] : '';
     final subtitleText = texts.length > 1 ? texts[1] : '';
@@ -32,6 +32,8 @@ class Template1 extends BaseTemplate {
 
     final textAreaFlex = ((1 - imageSizeRatio) * 100).round();
     final imageFlex = (imageSizeRatio * 100).round();
+    final radius = isTablet ? size.width * 0.02 : size.width * 0.04;
+    final cropBottom = isTablet ? 1.0 / 3.0 : 0.0;
 
     return Container(
       width: size.width,
@@ -81,17 +83,13 @@ class Template1 extends BaseTemplate {
                 padding: EdgeInsets.only(
                   left: size.width * 0.04,
                   right: size.width * 0.04,
-                  bottom: footerText.isNotEmpty
-                      ? 0
-                      : size.height * 0.03,
+                  bottom: footerText.isNotEmpty ? 0 : size.height * 0.03,
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(size.width * 0.04),
-                  child: buildImageWidget(
-                    imagePath,
-                    deviceFrame: deviceFrame,
-                    alignment: imageAlignment,
-                  ),
+                child: buildImageWidget(
+                  imagePath,
+                  deviceFrame: deviceFrame,
+                  cropBottomFraction: cropBottom,
+                  borderRadius: radius,
                 ),
               ),
             ),

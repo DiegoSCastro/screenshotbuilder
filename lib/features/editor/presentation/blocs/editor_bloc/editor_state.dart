@@ -18,6 +18,7 @@ sealed class EditorState with _$EditorState {
     @Default(false) bool showDeviceFrame,
     @Default(0.80) double imageSizeRatio,
     @Default(Color(0xFFFFFFFF)) Color textColor,
+    @Default(false) bool previewTablet,
   }) = _EditorState;
 
   factory EditorState.initial() => const EditorState();

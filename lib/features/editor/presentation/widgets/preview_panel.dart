@@ -19,7 +19,9 @@ class PreviewPanel extends StatelessWidget {
   final DeviceFrameStyle deviceFrame;
   final double imageSizeRatio;
   final Color textColor;
+  final bool previewTablet;
   final ValueChanged<int> onSelect;
+  final ValueChanged<bool> onPreviewTabletChanged;
 
   const PreviewPanel({
     super.key,
@@ -34,7 +36,9 @@ class PreviewPanel extends StatelessWidget {
     this.deviceFrame = DeviceFrameStyle.none,
     this.imageSizeRatio = 0.8,
     this.textColor = Colors.white,
+    this.previewTablet = false,
     required this.onSelect,
+    required this.onPreviewTabletChanged,
   });
 
   List<String> _textsFor(String path) {
@@ -49,8 +53,12 @@ class PreviewPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appColors = context.appColors;
-    final primarySize = ExportConfig.sizesForStore(storeType).first;
-    final aspectRatio = primarySize.width / primarySize.height;
+    final sizes = ExportConfig.sizesForStore(storeType);
+    final activeSize = previewTablet
+        ? sizes.firstWhere((s) => s.isTablet, orElse: () => sizes.first)
+        : sizes.firstWhere((s) => !s.isTablet, orElse: () => sizes.first);
+    final aspectRatio = activeSize.width / activeSize.height;
+    final hasTabletSize = sizes.any((s) => s.isTablet);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -83,6 +91,10 @@ class PreviewPanel extends StatelessWidget {
                 ),
               ),
             ],
+            if (hasTabletSize) ...[
+              const SizedBox(width: 12),
+              _buildPreviewModeToggle(context),
+            ],
           ],
         ),
         const SizedBox(height: 8),
@@ -93,12 +105,88 @@ class PreviewPanel extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Text(
-          '${primarySize.width.toInt()} x ${primarySize.height.toInt()} — ${storeType.displayName}',
+          '${activeSize.width.toInt()} x ${activeSize.height.toInt()} — ${storeType.displayName}${previewTablet ? ' (Tablet)' : ''}',
           style: context.labelSmall(
             color: appColors?.subtext?.withValues(alpha: 0.5),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildPreviewModeToggle(BuildContext context) {
+    final appColors = context.appColors;
+    final primary = appColors?.primary ?? Colors.blue;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: appColors?.surfaceColor?.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(
+          color: appColors?.contentBorder?.withValues(alpha: 0.15) ??
+              Colors.grey.shade300,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildToggleButton(
+            context,
+            icon: Icons.phone_iphone,
+            label: 'Phone',
+            isActive: !previewTablet,
+            primary: primary,
+            onTap: () => onPreviewTabletChanged(false),
+          ),
+          _buildToggleButton(
+            context,
+            icon: Icons.tablet_mac,
+            label: 'Tablet',
+            isActive: previewTablet,
+            primary: primary,
+            onTap: () => onPreviewTabletChanged(true),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildToggleButton(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required bool isActive,
+    required Color primary,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+        decoration: BoxDecoration(
+          color: isActive ? primary.withValues(alpha: 0.15) : Colors.transparent,
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 12,
+              color: isActive ? primary : Colors.grey,
+            ),
+            const SizedBox(width: 3),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+                color: isActive ? primary : Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -110,17 +198,13 @@ class PreviewPanel extends StatelessWidget {
           builder: (context, constraints) {
             final size =
                 Size(constraints.maxWidth, constraints.maxHeight);
-                  return _buildScreenshotCard(
-                    context: context,
-                    size: size,
-                    imagePath: null,
-                    texts: List.filled(maxTexts, ''),
-                    isSelected: false,
-                    index: -1,
-                    textScale: textScale,
-                    deviceFrame: deviceFrame,
-                    imageSizeRatio: imageSizeRatio,
-                    textColor: textColor,
+            return _buildScreenshotCard(
+              context: context,
+              size: size,
+              imagePath: null,
+              texts: List.filled(maxTexts, ''),
+              isSelected: false,
+              index: -1,
             );
           },
         ),
@@ -159,10 +243,6 @@ class PreviewPanel extends StatelessWidget {
                     texts: texts,
                     isSelected: index == selectedIndex,
                     index: index,
-                    textScale: textScale,
-                    deviceFrame: deviceFrame,
-                    imageSizeRatio: imageSizeRatio,
-                    textColor: textColor,
                   );
                 },
               ),
@@ -180,10 +260,6 @@ class PreviewPanel extends StatelessWidget {
     required List<String> texts,
     required bool isSelected,
     required int index,
-    double textScale = 1.0,
-    DeviceFrameStyle deviceFrame = DeviceFrameStyle.none,
-    double imageSizeRatio = 0.8,
-    Color textColor = Colors.white,
   }) {
     final appColors = context.appColors;
     final primary = appColors?.primary ?? Colors.blue;
@@ -219,6 +295,7 @@ class PreviewPanel extends StatelessWidget {
               deviceFrame: deviceFrame,
               imageSizeRatio: imageSizeRatio,
               textColor: textColor,
+              isTablet: previewTablet,
             ),
           ),
           if (index >= 0)
