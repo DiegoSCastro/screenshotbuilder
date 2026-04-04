@@ -4,7 +4,11 @@ part of 'editor_bloc.dart';
 class EditorEvent with _$EditorEvent {
   const factory EditorEvent.selectStore(StoreType store) = _SelectStore;
   const factory EditorEvent.selectTemplate(int index) = _SelectTemplate;
-  const factory EditorEvent.addImages(List<String> paths) = _AddImages;
+  const factory EditorEvent.addImages({
+    required List<String> paths,
+    Map<String, Uint8List>? webImageBytes,
+    Map<String, String>? webImageDisplayNames,
+  }) = _AddImages;
   const factory EditorEvent.removeImage(int index) = _RemoveImage;
   const factory EditorEvent.updateText({
     required int index,

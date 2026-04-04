@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -8,6 +8,7 @@ import '../../common/widgets/device_frame.dart';
 import '../../models/background_config.dart';
 import '../../models/export_config.dart';
 import '../../templates/base_template.dart';
+import 'screenshot_export.dart';
 
 class ScreenshotRenderer {
   Future<List<String>> renderAll({
@@ -23,6 +24,7 @@ class ScreenshotRenderer {
     DeviceFrameStyle deviceFrame = DeviceFrameStyle.none,
     double imageSizeRatio = 0.8,
     Color textColor = Colors.white,
+    Map<String, Uint8List> webImageBytes = const {},
     void Function(int current, int total)? onProgress,
   }) async {
     final savedPaths = <String>[];
@@ -32,20 +34,19 @@ class ScreenshotRenderer {
 
     final overlay = Overlay.of(context);
 
-    final dir = Directory(outputDir);
-    if (!await dir.exists()) {
-      await dir.create(recursive: true);
-    }
+    await ensureOutputDir(outputDir);
 
     for (final size in sizes) {
       for (int i = 0; i < images.length; i++) {
         final imagePath = images[i];
         final texts = _textsForImage(imagePath, textsPerImage, maxTexts);
+        final imageBytes = webImageBytes[imagePath];
 
         final bytes = await _renderOffscreen(
           overlay: overlay,
           template: template,
           imagePath: imagePath,
+          imageBytes: imageBytes,
           texts: texts,
           background: background,
           targetSize: Size(size.width, size.height),
@@ -57,8 +58,9 @@ class ScreenshotRenderer {
         );
 
         final fileName = '${size.name}_screenshot_${i}_$timestamp.png';
-        final filePath = '$outputDir/$fileName';
-        await File(filePath).writeAsBytes(bytes);
+        final filePath =
+            outputDir.isEmpty ? fileName : '$outputDir/$fileName';
+        await writePngBytes(filePath, bytes);
         savedPaths.add(filePath);
 
         current++;
@@ -86,6 +88,7 @@ class ScreenshotRenderer {
     required OverlayState overlay,
     required BaseTemplate template,
     required String imagePath,
+    Uint8List? imageBytes,
     required List<String> texts,
     required BackgroundConfig background,
     required Size targetSize,
@@ -127,6 +130,7 @@ class ScreenshotRenderer {
                 size: logicalSize,
                 texts: texts,
                 imagePath: imagePath,
+                imageBytes: imageBytes,
                 background: background,
                 textScale: textScale,
                 deviceFrame: deviceFrame,

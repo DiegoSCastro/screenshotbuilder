@@ -1,10 +1,11 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 
 import '../common/widgets/device_frame.dart';
 import '../models/background_config.dart';
 import '../models/template_model.dart';
+import 'template_file_image.dart';
 
 abstract class BaseTemplate {
   TemplateModel get model;
@@ -13,6 +14,7 @@ abstract class BaseTemplate {
     required Size size,
     required List<String> texts,
     required String? imagePath,
+    Uint8List? imageBytes,
     required BackgroundConfig background,
     double textScale = 1.0,
     DeviceFrameStyle deviceFrame = DeviceFrameStyle.none,
@@ -38,13 +40,18 @@ abstract class BaseTemplate {
 
   Widget buildImageWidget(
     String? imagePath, {
+    Uint8List? imageBytes,
     BoxFit fit = BoxFit.contain,
     DeviceFrameStyle deviceFrame = DeviceFrameStyle.none,
     double cropBottomFraction = 0.0,
     double borderRadius = 0.0,
   }) {
+    final hasRaster =
+        imageBytes != null ||
+        (imagePath != null && imagePath.isNotEmpty);
+
     Widget image;
-    if (imagePath == null || imagePath.isEmpty) {
+    if (!hasRaster) {
       image = Container(
         color: Colors.black12,
         child: const Center(
@@ -54,21 +61,37 @@ abstract class BaseTemplate {
     } else {
       final useCover =
           deviceFrame != DeviceFrameStyle.none || cropBottomFraction > 0;
-      image = Image.file(
-        File(imagePath),
-        fit: useCover ? BoxFit.cover : fit,
-        alignment: Alignment.topCenter,
-        errorBuilder: (_, _, _) => Container(
-          color: Colors.black12,
-          child: const Center(
-            child:
-                Icon(Icons.broken_image, size: 48, color: Colors.white38),
+      final effectiveFit = useCover ? BoxFit.cover : fit;
+      if (imageBytes != null) {
+        image = Image.memory(
+          imageBytes,
+          fit: effectiveFit,
+          alignment: Alignment.topCenter,
+          errorBuilder: (_, _, _) => Container(
+            color: Colors.black12,
+            child: const Center(
+              child:
+                  Icon(Icons.broken_image, size: 48, color: Colors.white38),
+            ),
           ),
-        ),
-      );
+        );
+      } else {
+        image = platformFileImage(
+          imagePath!,
+          fit: effectiveFit,
+          alignment: Alignment.topCenter,
+          errorBuilder: (_, _, _) => Container(
+            color: Colors.black12,
+            child: const Center(
+              child:
+                  Icon(Icons.broken_image, size: 48, color: Colors.white38),
+            ),
+          ),
+        );
+      }
     }
 
-    if (cropBottomFraction > 0 && imagePath != null && imagePath.isNotEmpty) {
+    if (cropBottomFraction > 0 && hasRaster) {
       final originalImage = image;
       image = LayoutBuilder(
         builder: (context, constraints) {

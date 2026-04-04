@@ -1,8 +1,8 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../../../../common/widgets/device_frame.dart';
 import '../../../../core/extensions/theme_ext.dart';
@@ -11,10 +11,13 @@ import '../../../../models/background_config.dart';
 import '../../../../models/export_config.dart';
 import '../../../../templates/base_template.dart';
 import '../../../../utils/image_utils.dart';
+import 'export_dialog_paths_stub.dart'
+    if (dart.library.io) 'export_dialog_paths_io.dart' as export_paths;
 
 class ExportDialog extends StatefulWidget {
   final BaseTemplate template;
   final List<String> imagePaths;
+  final Map<String, Uint8List> webImageBytes;
   final Map<String, List<String>> textsPerImage;
   final int maxTexts;
   final BackgroundConfig background;
@@ -28,6 +31,7 @@ class ExportDialog extends StatefulWidget {
     super.key,
     required this.template,
     required this.imagePaths,
+    this.webImageBytes = const {},
     required this.textsPerImage,
     required this.maxTexts,
     required this.background,
@@ -42,6 +46,7 @@ class ExportDialog extends StatefulWidget {
     BuildContext context, {
     required BaseTemplate template,
     required List<String> imagePaths,
+    Map<String, Uint8List> webImageBytes = const {},
     required Map<String, List<String>> textsPerImage,
     required int maxTexts,
     required BackgroundConfig background,
@@ -57,6 +62,7 @@ class ExportDialog extends StatefulWidget {
       builder: (_) => ExportDialog(
         template: template,
         imagePaths: imagePaths,
+        webImageBytes: webImageBytes,
         textsPerImage: textsPerImage,
         maxTexts: maxTexts,
         background: background,
@@ -100,7 +106,11 @@ class _ExportDialogState extends State<ExportDialog> {
       if (!mounted) return;
 
       setState(() => _status = 'Pre-caching images...');
-      await ImageUtils.precacheImages(context, widget.imagePaths);
+      await ImageUtils.precacheImages(
+        context,
+        widget.imagePaths,
+        webImageBytes: widget.webImageBytes,
+      );
 
       if (!mounted) return;
 
@@ -128,6 +138,7 @@ class _ExportDialogState extends State<ExportDialog> {
         deviceFrame: deviceFrame,
         imageSizeRatio: widget.imageSizeRatio,
         textColor: widget.textColor,
+        webImageBytes: widget.webImageBytes,
         onProgress: (current, total) {
           if (mounted) {
             setState(() {
@@ -142,7 +153,9 @@ class _ExportDialogState extends State<ExportDialog> {
         setState(() {
           _isComplete = true;
           _exportedPaths = paths;
-          _status = 'Done! ${paths.length} screenshots generated.';
+          _status = kIsWeb
+              ? 'Done! ${paths.length} files — check your downloads.'
+              : 'Done! ${paths.length} screenshots generated.';
         });
       }
     } catch (e) {
@@ -157,21 +170,13 @@ class _ExportDialogState extends State<ExportDialog> {
   }
 
   Future<String?> _getOutputDirectory() async {
+    if (kIsWeb) return '';
     final chosen = await FilePicker.platform.getDirectoryPath(
       dialogTitle: 'Choose export folder',
     );
     if (chosen != null) return chosen;
 
-    try {
-      final downloads = await getDownloadsDirectory();
-      if (downloads != null) {
-        final outputDir =
-            '${downloads.path}${Platform.pathSeparator}ScreenshotBuilder';
-        await Directory(outputDir).create(recursive: true);
-        return outputDir;
-      }
-    } catch (_) {}
-    return null;
+    return export_paths.defaultExportDirectory();
   }
 
   @override
@@ -244,7 +249,7 @@ class _ExportDialogState extends State<ExportDialog> {
                 overflow: TextOverflow.ellipsis,
               ),
             ],
-            if (_isComplete && _outputDir.isNotEmpty) ...[
+            if (_isComplete && !kIsWeb && _outputDir.isNotEmpty) ...[
               const SizedBox(height: 8),
               Text(
                 'Saved to: $_outputDir',
@@ -257,6 +262,15 @@ class _ExportDialogState extends State<ExportDialog> {
               const SizedBox(height: 4),
               Text(
                 '${_exportedPaths.length} files generated',
+                style: context.labelSmall(
+                  color: appColors?.subtext?.withValues(alpha: 0.5),
+                ),
+              ),
+            ],
+            if (_isComplete && kIsWeb) ...[
+              const SizedBox(height: 8),
+              Text(
+                '${_exportedPaths.length} PNG files (browser download)',
                 style: context.labelSmall(
                   color: appColors?.subtext?.withValues(alpha: 0.5),
                 ),

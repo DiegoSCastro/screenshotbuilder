@@ -179,6 +179,8 @@ class EditorScreen extends StatelessWidget {
         child: PreviewPanel(
           template: template,
           imagePaths: state.imagePaths,
+          webImageBytes: state.webImageBytes,
+          webImageDisplayNames: state.webImageDisplayNames,
           textsPerImage: state.textsPerImage,
           maxTexts: maxTexts,
           selectedIndex: state.selectedImageIndex,
@@ -216,12 +218,19 @@ class EditorScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: ImageListPanel(
           imagePaths: state.imagePaths,
+          webImageBytes: state.webImageBytes,
+          webImageDisplayNames: state.webImageDisplayNames,
           selectedIndex: state.selectedImageIndex,
           onSelect: (index) =>
               bloc.add(EditorEvent.selectImage(index)),
           onRemove: (index) =>
               bloc.add(EditorEvent.removeImage(index)),
-          onAdd: (paths) => bloc.add(EditorEvent.addImages(paths)),
+          onAdd: (paths, {webImageBytes, webImageDisplayNames}) =>
+              bloc.add(EditorEvent.addImages(
+                paths: paths,
+                webImageBytes: webImageBytes,
+                webImageDisplayNames: webImageDisplayNames,
+              )),
         ),
       ),
     );
@@ -316,6 +325,7 @@ class EditorScreen extends StatelessWidget {
       context,
       template: template,
       imagePaths: state.imagePaths,
+      webImageBytes: state.webImageBytes,
       textsPerImage: state.textsPerImage,
       maxTexts: template.model.maxTexts,
       background: state.background,

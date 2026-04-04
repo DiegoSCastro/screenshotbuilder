@@ -1,21 +1,31 @@
-import 'dart:io';
+import 'dart:typed_data';
 
-import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/material.dart';
 
 import '../../../../core/extensions/theme_ext.dart';
+import '../../../../templates/template_file_image.dart';
 import '../../../../utils/image_utils.dart';
 
 class ImageListPanel extends StatelessWidget {
   final List<String> imagePaths;
+  final Map<String, Uint8List> webImageBytes;
+  final Map<String, String> webImageDisplayNames;
   final int selectedIndex;
   final ValueChanged<int> onSelect;
   final ValueChanged<int> onRemove;
-  final ValueChanged<List<String>> onAdd;
+  final void Function(
+    List<String> paths, {
+    Map<String, Uint8List>? webImageBytes,
+    Map<String, String>? webImageDisplayNames,
+  }) onAdd;
 
   const ImageListPanel({
     super.key,
     required this.imagePaths,
+    this.webImageBytes = const {},
+    this.webImageDisplayNames = const {},
     required this.selectedIndex,
     required this.onSelect,
     required this.onRemove,
@@ -26,17 +36,44 @@ class ImageListPanel extends StatelessWidget {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.image,
       allowMultiple: true,
+      withData: kIsWeb,
     );
 
-    if (result != null && result.files.isNotEmpty) {
-      final paths = result.files
-          .where((f) => f.path != null)
-          .map((f) => f.path!)
-          .where((p) => ImageUtils.isValidImagePath(p))
-          .toList();
-      if (paths.isNotEmpty) {
-        onAdd(paths);
+    if (result == null || result.files.isEmpty) return;
+
+    if (kIsWeb) {
+      final keys = <String>[];
+      final bytesMap = <String, Uint8List>{};
+      final namesMap = <String, String>{};
+      var counter = 0;
+      for (final f in result.files) {
+        final raw = f.bytes;
+        if (raw == null || raw.isEmpty) continue;
+        if (!ImageUtils.isLikelyImageFileName(f.name)) continue;
+        final key =
+            'web:${DateTime.now().microsecondsSinceEpoch}_${counter++}';
+        keys.add(key);
+        bytesMap[key] = raw;
+        namesMap[key] =
+            f.name.isNotEmpty ? f.name : 'image_${keys.length}.png';
       }
+      if (keys.isNotEmpty) {
+        onAdd(
+          keys,
+          webImageBytes: bytesMap,
+          webImageDisplayNames: namesMap,
+        );
+      }
+      return;
+    }
+
+    final paths = result.files
+        .where((f) => f.path != null)
+        .map((f) => f.path!)
+        .where(ImageUtils.isValidImagePath)
+        .toList();
+    if (paths.isNotEmpty) {
+      onAdd(paths);
     }
   }
 
@@ -76,6 +113,7 @@ class ImageListPanel extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final path = imagePaths[index];
                     final isSelected = index == selectedIndex;
+                    final thumbBytes = webImageBytes[path];
 
                     return GestureDetector(
                       onTap: () => onSelect(index),
@@ -100,18 +138,35 @@ class ImageListPanel extends StatelessWidget {
                               child: SizedBox(
                                 width: 40,
                                 height: 40,
-                                child: Image.file(
-                                  File(path),
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (_, _, _) =>
-                                      const Icon(Icons.broken_image, size: 20),
-                                ),
+                                child: thumbBytes != null
+                                    ? Image.memory(
+                                        thumbBytes,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (_, _, _) =>
+                                            const Icon(
+                                          Icons.broken_image,
+                                          size: 20,
+                                        ),
+                                      )
+                                    : platformFileImage(
+                                        path,
+                                        fit: BoxFit.cover,
+                                        alignment: Alignment.center,
+                                        errorBuilder: (_, _, _) =>
+                                            const Icon(
+                                          Icons.broken_image,
+                                          size: 20,
+                                        ),
+                                      ),
                               ),
                             ),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                ImageUtils.getFileName(path),
+                                ImageUtils.displayNameFor(
+                                  path,
+                                  webImageDisplayNames,
+                                ),
                                 style: TextStyle(
                                   fontSize: 11,
                                   color: appColors?.onSurface,

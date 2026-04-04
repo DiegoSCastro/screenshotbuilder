@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 import '../../../../common/widgets/device_frame.dart';
@@ -10,6 +12,8 @@ import '../../../../utils/image_utils.dart';
 class PreviewPanel extends StatelessWidget {
   final BaseTemplate template;
   final List<String> imagePaths;
+  final Map<String, Uint8List> webImageBytes;
+  final Map<String, String> webImageDisplayNames;
   final Map<String, List<String>> textsPerImage;
   final int maxTexts;
   final int selectedIndex;
@@ -27,6 +31,8 @@ class PreviewPanel extends StatelessWidget {
     super.key,
     required this.template,
     required this.imagePaths,
+    this.webImageBytes = const {},
+    this.webImageDisplayNames = const {},
     required this.textsPerImage,
     required this.maxTexts,
     required this.selectedIndex,
@@ -202,6 +208,7 @@ class PreviewPanel extends StatelessWidget {
               context: context,
               size: size,
               imagePath: null,
+              imageBytes: null,
               texts: List.filled(maxTexts, ''),
               isSelected: false,
               index: -1,
@@ -240,6 +247,7 @@ class PreviewPanel extends StatelessWidget {
                     context: context,
                     size: size,
                     imagePath: path,
+                    imageBytes: webImageBytes[path],
                     texts: texts,
                     isSelected: index == selectedIndex,
                     index: index,
@@ -257,6 +265,7 @@ class PreviewPanel extends StatelessWidget {
     required BuildContext context,
     required Size size,
     required String? imagePath,
+    Uint8List? imageBytes,
     required List<String> texts,
     required bool isSelected,
     required int index,
@@ -290,6 +299,7 @@ class PreviewPanel extends StatelessWidget {
               size: size,
               texts: texts,
               imagePath: imagePath,
+              imageBytes: imageBytes,
               background: background,
               textScale: textScale,
               deviceFrame: deviceFrame,
@@ -311,7 +321,10 @@ class PreviewPanel extends StatelessWidget {
                 ),
                 child: Text(
                   imagePath != null
-                      ? ImageUtils.getFileName(imagePath)
+                      ? ImageUtils.displayNameFor(
+                          imagePath,
+                          webImageDisplayNames,
+                        )
                       : '',
                   style: const TextStyle(
                     color: Colors.white,

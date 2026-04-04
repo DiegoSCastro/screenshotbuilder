@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 import '../common/widgets/device_frame.dart';
@@ -19,6 +21,7 @@ class Template3 extends BaseTemplate {
     required Size size,
     required List<String> texts,
     required String? imagePath,
+    Uint8List? imageBytes,
     required BackgroundConfig background,
     double textScale = 1.0,
     DeviceFrameStyle deviceFrame = DeviceFrameStyle.none,
@@ -115,6 +118,7 @@ class Template3 extends BaseTemplate {
               ),
               child: buildImageWidget(
                 imagePath,
+                imageBytes: imageBytes,
                 deviceFrame: deviceFrame,
                 cropBottomFraction: cropBottom,
                 borderRadius: radius,

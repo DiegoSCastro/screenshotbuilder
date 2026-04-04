@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -27,6 +29,15 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
       final updated = List<String>.from(state.imagePaths)..addAll(event.paths);
       final updatedTexts =
           Map<String, List<String>>.from(state.textsPerImage);
+      final updatedBytes = Map<String, Uint8List>.from(state.webImageBytes);
+      final updatedNames =
+          Map<String, String>.from(state.webImageDisplayNames);
+      if (event.webImageBytes != null) {
+        updatedBytes.addAll(event.webImageBytes!);
+      }
+      if (event.webImageDisplayNames != null) {
+        updatedNames.addAll(event.webImageDisplayNames!);
+      }
       final maxTexts =
           TemplateRegistry.getByIndex(state.selectedTemplateIndex)
               .model
@@ -39,6 +50,8 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
       emit(state.copyWith(
         imagePaths: updated,
         textsPerImage: updatedTexts,
+        webImageBytes: updatedBytes,
+        webImageDisplayNames: updatedNames,
       ));
     });
 
@@ -50,6 +63,11 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
       final updatedTexts =
           Map<String, List<String>>.from(state.textsPerImage)
             ..remove(removedPath);
+      final updatedBytes = Map<String, Uint8List>.from(state.webImageBytes)
+        ..remove(removedPath);
+      final updatedNames =
+          Map<String, String>.from(state.webImageDisplayNames)
+            ..remove(removedPath);
       int idx = state.selectedImageIndex;
       if (idx >= updated.length && updated.isNotEmpty) {
         idx = updated.length - 1;
@@ -59,6 +77,8 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
       emit(state.copyWith(
         imagePaths: updated,
         textsPerImage: updatedTexts,
+        webImageBytes: updatedBytes,
+        webImageDisplayNames: updatedNames,
         selectedImageIndex: idx,
       ));
     });

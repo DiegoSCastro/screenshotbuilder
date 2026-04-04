@@ -24,6 +24,8 @@ void main() {
       expect(state.storeType, StoreType.appStore);
       expect(state.selectedTemplateIndex, 0);
       expect(state.imagePaths, isEmpty);
+      expect(state.webImageBytes, isEmpty);
+      expect(state.webImageDisplayNames, isEmpty);
       expect(state.textsPerImage, isEmpty);
       expect(state.background.isGradient, true);
       expect(state.selectedImageIndex, 0);
@@ -73,8 +75,8 @@ void main() {
       'addImages should append paths and initialize per-image texts',
       build: () => EditorBloc(),
       act: (bloc) {
-        bloc.add(const EditorEvent.addImages(['/img1.png']));
-        bloc.add(const EditorEvent.addImages(['/img2.png']));
+        bloc.add(const EditorEvent.addImages(paths: ['/img1.png']));
+        bloc.add(const EditorEvent.addImages(paths: ['/img2.png']));
       },
       expect: () => [
         isA<EditorState>()

@@ -8,6 +8,8 @@ sealed class EditorState with _$EditorState {
     @Default(StoreType.appStore) StoreType storeType,
     @Default(0) int selectedTemplateIndex,
     @Default([]) List<String> imagePaths,
+    @Default({}) Map<String, Uint8List> webImageBytes,
+    @Default({}) Map<String, String> webImageDisplayNames,
     @Default({}) Map<String, List<String>> textsPerImage,
     @Default(BackgroundConfig(
       gradientColors: [Color(0xFF667EEA), Color(0xFF764BA2)],
