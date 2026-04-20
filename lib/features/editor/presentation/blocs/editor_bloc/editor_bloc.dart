@@ -8,6 +8,8 @@ import 'package:injectable/injectable.dart';
 import '../../../../../common/widgets/device_frame.dart';
 import '../../../../../models/background_config.dart';
 import '../../../../../models/export_config.dart';
+import '../../../../../models/screenshot_font_family.dart';
+import '../../../../../models/text_vertical_placement.dart';
 import '../../../../../templates/template_registry.dart';
 
 part 'editor_event.dart';
@@ -63,6 +65,10 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
       final updatedTexts =
           Map<String, List<String>>.from(state.textsPerImage)
             ..remove(removedPath);
+      final updatedPlacement =
+          Map<String, TextVerticalPlacement>.from(
+        state.textPlacementPerImage,
+      )..remove(removedPath);
       final updatedBytes = Map<String, Uint8List>.from(state.webImageBytes)
         ..remove(removedPath);
       final updatedNames =
@@ -77,6 +83,7 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
       emit(state.copyWith(
         imagePaths: updated,
         textsPerImage: updatedTexts,
+        textPlacementPerImage: updatedPlacement,
         webImageBytes: updatedBytes,
         webImageDisplayNames: updatedNames,
         selectedImageIndex: idx,
@@ -98,6 +105,23 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
       final updatedTexts =
           Map<String, List<String>>.from(state.textsPerImage);
       updatedTexts[path] = current;
+      emit(state.copyWith(textsPerImage: updatedTexts));
+    });
+
+    on<_UpdateTitle>((event, emit) {
+      final path = state.selectedImagePath;
+      if (path == null) return;
+      final maxTexts =
+          TemplateRegistry.getByIndex(state.selectedTemplateIndex)
+              .model
+              .maxTexts;
+      final next = List<String>.generate(
+        maxTexts,
+        (i) => i == 0 ? event.text : '',
+      );
+      final updatedTexts =
+          Map<String, List<String>>.from(state.textsPerImage);
+      updatedTexts[path] = next;
       emit(state.copyWith(textsPerImage: updatedTexts));
     });
 
@@ -134,6 +158,24 @@ class EditorBloc extends Bloc<EditorEvent, EditorState> {
 
     on<_TogglePreviewTablet>((event, emit) {
       emit(state.copyWith(previewTablet: event.value));
+    });
+
+    on<_UpdateScreenshotFont>((event, emit) {
+      emit(state.copyWith(screenshotFont: event.font));
+    });
+
+    on<_UpdateTextPlacement>((event, emit) {
+      final path = state.selectedImagePath;
+      if (path == null) return;
+      final updated = Map<String, TextVerticalPlacement>.from(
+        state.textPlacementPerImage,
+      );
+      if (event.placement == TextVerticalPlacement.aboveImage) {
+        updated.remove(path);
+      } else {
+        updated[path] = event.placement;
+      }
+      emit(state.copyWith(textPlacementPerImage: updated));
     });
   }
 }

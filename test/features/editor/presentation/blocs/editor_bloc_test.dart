@@ -5,6 +5,7 @@ import 'package:screenshotbuilder/features/editor/presentation/blocs/editor_bloc
 import 'package:screenshotbuilder/common/widgets/device_frame.dart';
 import 'package:screenshotbuilder/models/background_config.dart';
 import 'package:screenshotbuilder/models/export_config.dart';
+import 'package:screenshotbuilder/models/text_vertical_placement.dart';
 
 void main() {
   group('EditorBloc', () {
@@ -27,6 +28,7 @@ void main() {
       expect(state.webImageBytes, isEmpty);
       expect(state.webImageDisplayNames, isEmpty);
       expect(state.textsPerImage, isEmpty);
+      expect(state.textPlacementPerImage, isEmpty);
       expect(state.background.isGradient, true);
       expect(state.selectedImageIndex, 0);
       expect(state.textScale, 1.0);
@@ -145,6 +147,92 @@ void main() {
         isA<EditorState>()
             .having((s) => s.imagePaths, 'imagePaths', ['/img1.png'])
             .having((s) => s.selectedImageIndex, 'selectedImageIndex', 0),
+      ],
+    );
+
+    blocTest<EditorBloc, EditorState>(
+      'removeImage should remove text placement for that path',
+      build: () => EditorBloc(),
+      seed: () => EditorState(
+        imagePaths: ['/a.png', '/b.png'],
+        textsPerImage: {
+          '/a.png': ['', '', ''],
+          '/b.png': ['', '', ''],
+        },
+        textPlacementPerImage: {
+          '/a.png': TextVerticalPlacement.belowImage,
+          '/b.png': TextVerticalPlacement.belowImage,
+        },
+        selectedImageIndex: 0,
+      ),
+      act: (bloc) => bloc.add(const EditorEvent.removeImage(0)),
+      expect: () => [
+        isA<EditorState>()
+            .having(
+              (s) => s.textPlacementPerImage.containsKey('/a.png'),
+              'a placement removed',
+              false,
+            )
+            .having(
+              (s) => s.textPlacementPerImage['/b.png'],
+              'b placement kept',
+              TextVerticalPlacement.belowImage,
+            ),
+      ],
+    );
+
+    blocTest<EditorBloc, EditorState>(
+      'updateTextPlacement should affect selected image only',
+      build: () => EditorBloc(),
+      seed: () => const EditorState(
+        imagePaths: ['/x.png', '/y.png'],
+        textsPerImage: {
+          '/x.png': ['', '', ''],
+          '/y.png': ['', '', ''],
+        },
+        selectedImageIndex: 0,
+      ),
+      act: (bloc) => bloc.add(
+        const EditorEvent.updateTextPlacement(
+          TextVerticalPlacement.belowImage,
+        ),
+      ),
+      expect: () => [
+        isA<EditorState>()
+            .having(
+              (s) => s.textPlacementForImage('/x.png'),
+              'x below',
+              TextVerticalPlacement.belowImage,
+            )
+            .having(
+              (s) => s.textPlacementForImage('/y.png'),
+              'y default above',
+              TextVerticalPlacement.aboveImage,
+            ),
+      ],
+    );
+
+    blocTest<EditorBloc, EditorState>(
+      'updateTextPlacement to above clears map entry',
+      build: () => EditorBloc(),
+      seed: () => EditorState(
+        imagePaths: ['/x.png'],
+        textsPerImage: {'/x.png': ['', '', '']},
+        textPlacementPerImage: {
+          '/x.png': TextVerticalPlacement.belowImage,
+        },
+      ),
+      act: (bloc) => bloc.add(
+        const EditorEvent.updateTextPlacement(
+          TextVerticalPlacement.aboveImage,
+        ),
+      ),
+      expect: () => [
+        isA<EditorState>().having(
+          (s) => s.textPlacementPerImage,
+          'placement map empty for default',
+          isEmpty,
+        ),
       ],
     );
 
@@ -372,6 +460,14 @@ void main() {
         );
         final texts = state.currentTexts(3);
         expect(texts, ['B1', 'B2', 'B3']);
+      });
+
+      test('textPlacementForImage defaults to aboveImage', () {
+        const state = EditorState();
+        expect(
+          state.textPlacementForImage('/any.png'),
+          TextVerticalPlacement.aboveImage,
+        );
       });
 
       test('deviceFrameStyle returns none when showDeviceFrame is false', () {

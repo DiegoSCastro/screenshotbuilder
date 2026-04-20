@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'base_template.dart';
 import 'template1.dart';
 import 'template2.dart';
@@ -22,6 +24,18 @@ class TemplateRegistry {
       return templates.firstWhere((t) => t.model.id == id);
     } catch (_) {
       return null;
+    }
+  }
+
+  /// Matches the main title [FontWeight] used in each template’s screenshot.
+  static FontWeight titleFontWeightForTemplate(BaseTemplate template) {
+    switch (template.model.id) {
+      case 'template_2':
+        return FontWeight.w800;
+      case 'template_1':
+      case 'template_3':
+      default:
+        return FontWeight.w700;
     }
   }
 }

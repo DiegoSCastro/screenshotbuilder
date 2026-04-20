@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:screenshotbuilder/models/background_config.dart';
+import 'package:screenshotbuilder/models/text_vertical_placement.dart';
 import 'package:screenshotbuilder/templates/template1.dart';
 import 'package:screenshotbuilder/templates/template2.dart';
 import 'package:screenshotbuilder/templates/template3.dart';
@@ -25,6 +26,23 @@ void main() {
         texts: ['Title', 'Subtitle', 'Footer'],
         imagePath: null,
         background: testBackground,
+      );
+
+      await tester.pumpWidget(wrapWithApp(widget));
+
+      expect(find.text('Title'), findsOneWidget);
+      expect(find.text('Subtitle'), findsOneWidget);
+      expect(find.text('Footer'), findsOneWidget);
+    });
+
+    testWidgets('should render with text below image', (tester) async {
+      final template = Template1();
+      final widget = template.build(
+        size: testSize,
+        texts: ['Title', 'Subtitle', 'Footer'],
+        imagePath: null,
+        background: testBackground,
+        textVerticalPlacement: TextVerticalPlacement.belowImage,
       );
 
       await tester.pumpWidget(wrapWithApp(widget));
@@ -118,6 +136,22 @@ void main() {
       );
 
       await tester.pumpWidget(wrapWithApp(widget));
+      expect(find.byIcon(Icons.image_outlined), findsOneWidget);
+    });
+
+    testWidgets('should swap row when text after image', (tester) async {
+      final template = Template3();
+      final widget = template.build(
+        size: const Size(640, 360),
+        texts: ['Title', 'Description', 'CTA'],
+        imagePath: null,
+        background: testBackground,
+        textVerticalPlacement: TextVerticalPlacement.belowImage,
+      );
+
+      await tester.pumpWidget(wrapWithApp(widget));
+
+      expect(find.text('Title'), findsOneWidget);
       expect(find.byIcon(Icons.image_outlined), findsOneWidget);
     });
   });

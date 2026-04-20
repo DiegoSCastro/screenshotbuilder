@@ -7,6 +7,8 @@ import 'package:flutter/rendering.dart';
 import '../../common/widgets/device_frame.dart';
 import '../../models/background_config.dart';
 import '../../models/export_config.dart';
+import '../../models/screenshot_font_family.dart';
+import '../../models/text_vertical_placement.dart';
 import '../../templates/base_template.dart';
 import 'screenshot_export.dart';
 
@@ -24,7 +26,9 @@ class ScreenshotRenderer {
     DeviceFrameStyle deviceFrame = DeviceFrameStyle.none,
     double imageSizeRatio = 0.8,
     Color textColor = Colors.white,
+    ScreenshotFontFamily screenshotFont = ScreenshotFontFamily.nunito,
     Map<String, Uint8List> webImageBytes = const {},
+    Map<String, TextVerticalPlacement> textPlacementPerImage = const {},
     void Function(int current, int total)? onProgress,
   }) async {
     final savedPaths = <String>[];
@@ -41,6 +45,9 @@ class ScreenshotRenderer {
         final imagePath = images[i];
         final texts = _textsForImage(imagePath, textsPerImage, maxTexts);
         final imageBytes = webImageBytes[imagePath];
+        final textVerticalPlacement =
+            textPlacementPerImage[imagePath] ??
+                TextVerticalPlacement.aboveImage;
 
         final bytes = await _renderOffscreen(
           overlay: overlay,
@@ -54,7 +61,9 @@ class ScreenshotRenderer {
           deviceFrame: deviceFrame,
           imageSizeRatio: imageSizeRatio,
           textColor: textColor,
+          screenshotFont: screenshotFont,
           isTablet: size.isTablet,
+          textVerticalPlacement: textVerticalPlacement,
         );
 
         final fileName = '${size.name}_screenshot_${i}_$timestamp.png';
@@ -96,7 +105,10 @@ class ScreenshotRenderer {
     required DeviceFrameStyle deviceFrame,
     required double imageSizeRatio,
     required Color textColor,
+    required ScreenshotFontFamily screenshotFont,
     required bool isTablet,
+    TextVerticalPlacement textVerticalPlacement =
+        TextVerticalPlacement.aboveImage,
   }) async {
     const double maxLogicalSize = 800.0;
     final double scale;
@@ -136,7 +148,9 @@ class ScreenshotRenderer {
                 deviceFrame: deviceFrame,
                 imageSizeRatio: imageSizeRatio,
                 textColor: textColor,
+                screenshotFont: screenshotFont,
                 isTablet: isTablet,
+                textVerticalPlacement: textVerticalPlacement,
               ),
             ),
           ),

@@ -55,7 +55,7 @@ extension EditorEventPatterns on EditorEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _SelectStore value)?  selectStore,TResult Function( _SelectTemplate value)?  selectTemplate,TResult Function( _AddImages value)?  addImages,TResult Function( _RemoveImage value)?  removeImage,TResult Function( _UpdateText value)?  updateText,TResult Function( _UpdateBackground value)?  updateBackground,TResult Function( _SelectImage value)?  selectImage,TResult Function( _ReorderImages value)?  reorderImages,TResult Function( _UpdateTextScale value)?  updateTextScale,TResult Function( _ToggleDeviceFrame value)?  toggleDeviceFrame,TResult Function( _UpdateImageSizeRatio value)?  updateImageSizeRatio,TResult Function( _UpdateTextColor value)?  updateTextColor,TResult Function( _TogglePreviewTablet value)?  togglePreviewTablet,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _SelectStore value)?  selectStore,TResult Function( _SelectTemplate value)?  selectTemplate,TResult Function( _AddImages value)?  addImages,TResult Function( _RemoveImage value)?  removeImage,TResult Function( _UpdateText value)?  updateText,TResult Function( _UpdateTitle value)?  updateTitle,TResult Function( _UpdateBackground value)?  updateBackground,TResult Function( _SelectImage value)?  selectImage,TResult Function( _ReorderImages value)?  reorderImages,TResult Function( _UpdateTextScale value)?  updateTextScale,TResult Function( _ToggleDeviceFrame value)?  toggleDeviceFrame,TResult Function( _UpdateImageSizeRatio value)?  updateImageSizeRatio,TResult Function( _UpdateTextColor value)?  updateTextColor,TResult Function( _UpdateScreenshotFont value)?  updateScreenshotFont,TResult Function( _TogglePreviewTablet value)?  togglePreviewTablet,TResult Function( _UpdateTextPlacement value)?  updateTextPlacement,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _SelectStore() when selectStore != null:
@@ -63,15 +63,18 @@ return selectStore(_that);case _SelectTemplate() when selectTemplate != null:
 return selectTemplate(_that);case _AddImages() when addImages != null:
 return addImages(_that);case _RemoveImage() when removeImage != null:
 return removeImage(_that);case _UpdateText() when updateText != null:
-return updateText(_that);case _UpdateBackground() when updateBackground != null:
+return updateText(_that);case _UpdateTitle() when updateTitle != null:
+return updateTitle(_that);case _UpdateBackground() when updateBackground != null:
 return updateBackground(_that);case _SelectImage() when selectImage != null:
 return selectImage(_that);case _ReorderImages() when reorderImages != null:
 return reorderImages(_that);case _UpdateTextScale() when updateTextScale != null:
 return updateTextScale(_that);case _ToggleDeviceFrame() when toggleDeviceFrame != null:
 return toggleDeviceFrame(_that);case _UpdateImageSizeRatio() when updateImageSizeRatio != null:
 return updateImageSizeRatio(_that);case _UpdateTextColor() when updateTextColor != null:
-return updateTextColor(_that);case _TogglePreviewTablet() when togglePreviewTablet != null:
-return togglePreviewTablet(_that);case _:
+return updateTextColor(_that);case _UpdateScreenshotFont() when updateScreenshotFont != null:
+return updateScreenshotFont(_that);case _TogglePreviewTablet() when togglePreviewTablet != null:
+return togglePreviewTablet(_that);case _UpdateTextPlacement() when updateTextPlacement != null:
+return updateTextPlacement(_that);case _:
   return orElse();
 
 }
@@ -89,7 +92,7 @@ return togglePreviewTablet(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _SelectStore value)  selectStore,required TResult Function( _SelectTemplate value)  selectTemplate,required TResult Function( _AddImages value)  addImages,required TResult Function( _RemoveImage value)  removeImage,required TResult Function( _UpdateText value)  updateText,required TResult Function( _UpdateBackground value)  updateBackground,required TResult Function( _SelectImage value)  selectImage,required TResult Function( _ReorderImages value)  reorderImages,required TResult Function( _UpdateTextScale value)  updateTextScale,required TResult Function( _ToggleDeviceFrame value)  toggleDeviceFrame,required TResult Function( _UpdateImageSizeRatio value)  updateImageSizeRatio,required TResult Function( _UpdateTextColor value)  updateTextColor,required TResult Function( _TogglePreviewTablet value)  togglePreviewTablet,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _SelectStore value)  selectStore,required TResult Function( _SelectTemplate value)  selectTemplate,required TResult Function( _AddImages value)  addImages,required TResult Function( _RemoveImage value)  removeImage,required TResult Function( _UpdateText value)  updateText,required TResult Function( _UpdateTitle value)  updateTitle,required TResult Function( _UpdateBackground value)  updateBackground,required TResult Function( _SelectImage value)  selectImage,required TResult Function( _ReorderImages value)  reorderImages,required TResult Function( _UpdateTextScale value)  updateTextScale,required TResult Function( _ToggleDeviceFrame value)  toggleDeviceFrame,required TResult Function( _UpdateImageSizeRatio value)  updateImageSizeRatio,required TResult Function( _UpdateTextColor value)  updateTextColor,required TResult Function( _UpdateScreenshotFont value)  updateScreenshotFont,required TResult Function( _TogglePreviewTablet value)  togglePreviewTablet,required TResult Function( _UpdateTextPlacement value)  updateTextPlacement,}){
 final _that = this;
 switch (_that) {
 case _SelectStore():
@@ -97,15 +100,18 @@ return selectStore(_that);case _SelectTemplate():
 return selectTemplate(_that);case _AddImages():
 return addImages(_that);case _RemoveImage():
 return removeImage(_that);case _UpdateText():
-return updateText(_that);case _UpdateBackground():
+return updateText(_that);case _UpdateTitle():
+return updateTitle(_that);case _UpdateBackground():
 return updateBackground(_that);case _SelectImage():
 return selectImage(_that);case _ReorderImages():
 return reorderImages(_that);case _UpdateTextScale():
 return updateTextScale(_that);case _ToggleDeviceFrame():
 return toggleDeviceFrame(_that);case _UpdateImageSizeRatio():
 return updateImageSizeRatio(_that);case _UpdateTextColor():
-return updateTextColor(_that);case _TogglePreviewTablet():
-return togglePreviewTablet(_that);case _:
+return updateTextColor(_that);case _UpdateScreenshotFont():
+return updateScreenshotFont(_that);case _TogglePreviewTablet():
+return togglePreviewTablet(_that);case _UpdateTextPlacement():
+return updateTextPlacement(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -122,7 +128,7 @@ return togglePreviewTablet(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _SelectStore value)?  selectStore,TResult? Function( _SelectTemplate value)?  selectTemplate,TResult? Function( _AddImages value)?  addImages,TResult? Function( _RemoveImage value)?  removeImage,TResult? Function( _UpdateText value)?  updateText,TResult? Function( _UpdateBackground value)?  updateBackground,TResult? Function( _SelectImage value)?  selectImage,TResult? Function( _ReorderImages value)?  reorderImages,TResult? Function( _UpdateTextScale value)?  updateTextScale,TResult? Function( _ToggleDeviceFrame value)?  toggleDeviceFrame,TResult? Function( _UpdateImageSizeRatio value)?  updateImageSizeRatio,TResult? Function( _UpdateTextColor value)?  updateTextColor,TResult? Function( _TogglePreviewTablet value)?  togglePreviewTablet,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _SelectStore value)?  selectStore,TResult? Function( _SelectTemplate value)?  selectTemplate,TResult? Function( _AddImages value)?  addImages,TResult? Function( _RemoveImage value)?  removeImage,TResult? Function( _UpdateText value)?  updateText,TResult? Function( _UpdateTitle value)?  updateTitle,TResult? Function( _UpdateBackground value)?  updateBackground,TResult? Function( _SelectImage value)?  selectImage,TResult? Function( _ReorderImages value)?  reorderImages,TResult? Function( _UpdateTextScale value)?  updateTextScale,TResult? Function( _ToggleDeviceFrame value)?  toggleDeviceFrame,TResult? Function( _UpdateImageSizeRatio value)?  updateImageSizeRatio,TResult? Function( _UpdateTextColor value)?  updateTextColor,TResult? Function( _UpdateScreenshotFont value)?  updateScreenshotFont,TResult? Function( _TogglePreviewTablet value)?  togglePreviewTablet,TResult? Function( _UpdateTextPlacement value)?  updateTextPlacement,}){
 final _that = this;
 switch (_that) {
 case _SelectStore() when selectStore != null:
@@ -130,15 +136,18 @@ return selectStore(_that);case _SelectTemplate() when selectTemplate != null:
 return selectTemplate(_that);case _AddImages() when addImages != null:
 return addImages(_that);case _RemoveImage() when removeImage != null:
 return removeImage(_that);case _UpdateText() when updateText != null:
-return updateText(_that);case _UpdateBackground() when updateBackground != null:
+return updateText(_that);case _UpdateTitle() when updateTitle != null:
+return updateTitle(_that);case _UpdateBackground() when updateBackground != null:
 return updateBackground(_that);case _SelectImage() when selectImage != null:
 return selectImage(_that);case _ReorderImages() when reorderImages != null:
 return reorderImages(_that);case _UpdateTextScale() when updateTextScale != null:
 return updateTextScale(_that);case _ToggleDeviceFrame() when toggleDeviceFrame != null:
 return toggleDeviceFrame(_that);case _UpdateImageSizeRatio() when updateImageSizeRatio != null:
 return updateImageSizeRatio(_that);case _UpdateTextColor() when updateTextColor != null:
-return updateTextColor(_that);case _TogglePreviewTablet() when togglePreviewTablet != null:
-return togglePreviewTablet(_that);case _:
+return updateTextColor(_that);case _UpdateScreenshotFont() when updateScreenshotFont != null:
+return updateScreenshotFont(_that);case _TogglePreviewTablet() when togglePreviewTablet != null:
+return togglePreviewTablet(_that);case _UpdateTextPlacement() when updateTextPlacement != null:
+return updateTextPlacement(_that);case _:
   return null;
 
 }
@@ -155,22 +164,25 @@ return togglePreviewTablet(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( StoreType store)?  selectStore,TResult Function( int index)?  selectTemplate,TResult Function( List<String> paths,  Map<String, Uint8List>? webImageBytes,  Map<String, String>? webImageDisplayNames)?  addImages,TResult Function( int index)?  removeImage,TResult Function( int index,  String text)?  updateText,TResult Function( BackgroundConfig background)?  updateBackground,TResult Function( int index)?  selectImage,TResult Function( int oldIndex,  int newIndex)?  reorderImages,TResult Function( double scale)?  updateTextScale,TResult Function( bool show)?  toggleDeviceFrame,TResult Function( double ratio)?  updateImageSizeRatio,TResult Function( Color color)?  updateTextColor,TResult Function( bool value)?  togglePreviewTablet,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( StoreType store)?  selectStore,TResult Function( int index)?  selectTemplate,TResult Function( List<String> paths,  Map<String, Uint8List>? webImageBytes,  Map<String, String>? webImageDisplayNames)?  addImages,TResult Function( int index)?  removeImage,TResult Function( int index,  String text)?  updateText,TResult Function( String text)?  updateTitle,TResult Function( BackgroundConfig background)?  updateBackground,TResult Function( int index)?  selectImage,TResult Function( int oldIndex,  int newIndex)?  reorderImages,TResult Function( double scale)?  updateTextScale,TResult Function( bool show)?  toggleDeviceFrame,TResult Function( double ratio)?  updateImageSizeRatio,TResult Function( Color color)?  updateTextColor,TResult Function( ScreenshotFontFamily font)?  updateScreenshotFont,TResult Function( bool value)?  togglePreviewTablet,TResult Function( TextVerticalPlacement placement)?  updateTextPlacement,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SelectStore() when selectStore != null:
 return selectStore(_that.store);case _SelectTemplate() when selectTemplate != null:
 return selectTemplate(_that.index);case _AddImages() when addImages != null:
 return addImages(_that.paths,_that.webImageBytes,_that.webImageDisplayNames);case _RemoveImage() when removeImage != null:
 return removeImage(_that.index);case _UpdateText() when updateText != null:
-return updateText(_that.index,_that.text);case _UpdateBackground() when updateBackground != null:
+return updateText(_that.index,_that.text);case _UpdateTitle() when updateTitle != null:
+return updateTitle(_that.text);case _UpdateBackground() when updateBackground != null:
 return updateBackground(_that.background);case _SelectImage() when selectImage != null:
 return selectImage(_that.index);case _ReorderImages() when reorderImages != null:
 return reorderImages(_that.oldIndex,_that.newIndex);case _UpdateTextScale() when updateTextScale != null:
 return updateTextScale(_that.scale);case _ToggleDeviceFrame() when toggleDeviceFrame != null:
 return toggleDeviceFrame(_that.show);case _UpdateImageSizeRatio() when updateImageSizeRatio != null:
 return updateImageSizeRatio(_that.ratio);case _UpdateTextColor() when updateTextColor != null:
-return updateTextColor(_that.color);case _TogglePreviewTablet() when togglePreviewTablet != null:
-return togglePreviewTablet(_that.value);case _:
+return updateTextColor(_that.color);case _UpdateScreenshotFont() when updateScreenshotFont != null:
+return updateScreenshotFont(_that.font);case _TogglePreviewTablet() when togglePreviewTablet != null:
+return togglePreviewTablet(_that.value);case _UpdateTextPlacement() when updateTextPlacement != null:
+return updateTextPlacement(_that.placement);case _:
   return orElse();
 
 }
@@ -188,22 +200,25 @@ return togglePreviewTablet(_that.value);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( StoreType store)  selectStore,required TResult Function( int index)  selectTemplate,required TResult Function( List<String> paths,  Map<String, Uint8List>? webImageBytes,  Map<String, String>? webImageDisplayNames)  addImages,required TResult Function( int index)  removeImage,required TResult Function( int index,  String text)  updateText,required TResult Function( BackgroundConfig background)  updateBackground,required TResult Function( int index)  selectImage,required TResult Function( int oldIndex,  int newIndex)  reorderImages,required TResult Function( double scale)  updateTextScale,required TResult Function( bool show)  toggleDeviceFrame,required TResult Function( double ratio)  updateImageSizeRatio,required TResult Function( Color color)  updateTextColor,required TResult Function( bool value)  togglePreviewTablet,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( StoreType store)  selectStore,required TResult Function( int index)  selectTemplate,required TResult Function( List<String> paths,  Map<String, Uint8List>? webImageBytes,  Map<String, String>? webImageDisplayNames)  addImages,required TResult Function( int index)  removeImage,required TResult Function( int index,  String text)  updateText,required TResult Function( String text)  updateTitle,required TResult Function( BackgroundConfig background)  updateBackground,required TResult Function( int index)  selectImage,required TResult Function( int oldIndex,  int newIndex)  reorderImages,required TResult Function( double scale)  updateTextScale,required TResult Function( bool show)  toggleDeviceFrame,required TResult Function( double ratio)  updateImageSizeRatio,required TResult Function( Color color)  updateTextColor,required TResult Function( ScreenshotFontFamily font)  updateScreenshotFont,required TResult Function( bool value)  togglePreviewTablet,required TResult Function( TextVerticalPlacement placement)  updateTextPlacement,}) {final _that = this;
 switch (_that) {
 case _SelectStore():
 return selectStore(_that.store);case _SelectTemplate():
 return selectTemplate(_that.index);case _AddImages():
 return addImages(_that.paths,_that.webImageBytes,_that.webImageDisplayNames);case _RemoveImage():
 return removeImage(_that.index);case _UpdateText():
-return updateText(_that.index,_that.text);case _UpdateBackground():
+return updateText(_that.index,_that.text);case _UpdateTitle():
+return updateTitle(_that.text);case _UpdateBackground():
 return updateBackground(_that.background);case _SelectImage():
 return selectImage(_that.index);case _ReorderImages():
 return reorderImages(_that.oldIndex,_that.newIndex);case _UpdateTextScale():
 return updateTextScale(_that.scale);case _ToggleDeviceFrame():
 return toggleDeviceFrame(_that.show);case _UpdateImageSizeRatio():
 return updateImageSizeRatio(_that.ratio);case _UpdateTextColor():
-return updateTextColor(_that.color);case _TogglePreviewTablet():
-return togglePreviewTablet(_that.value);case _:
+return updateTextColor(_that.color);case _UpdateScreenshotFont():
+return updateScreenshotFont(_that.font);case _TogglePreviewTablet():
+return togglePreviewTablet(_that.value);case _UpdateTextPlacement():
+return updateTextPlacement(_that.placement);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -220,22 +235,25 @@ return togglePreviewTablet(_that.value);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( StoreType store)?  selectStore,TResult? Function( int index)?  selectTemplate,TResult? Function( List<String> paths,  Map<String, Uint8List>? webImageBytes,  Map<String, String>? webImageDisplayNames)?  addImages,TResult? Function( int index)?  removeImage,TResult? Function( int index,  String text)?  updateText,TResult? Function( BackgroundConfig background)?  updateBackground,TResult? Function( int index)?  selectImage,TResult? Function( int oldIndex,  int newIndex)?  reorderImages,TResult? Function( double scale)?  updateTextScale,TResult? Function( bool show)?  toggleDeviceFrame,TResult? Function( double ratio)?  updateImageSizeRatio,TResult? Function( Color color)?  updateTextColor,TResult? Function( bool value)?  togglePreviewTablet,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( StoreType store)?  selectStore,TResult? Function( int index)?  selectTemplate,TResult? Function( List<String> paths,  Map<String, Uint8List>? webImageBytes,  Map<String, String>? webImageDisplayNames)?  addImages,TResult? Function( int index)?  removeImage,TResult? Function( int index,  String text)?  updateText,TResult? Function( String text)?  updateTitle,TResult? Function( BackgroundConfig background)?  updateBackground,TResult? Function( int index)?  selectImage,TResult? Function( int oldIndex,  int newIndex)?  reorderImages,TResult? Function( double scale)?  updateTextScale,TResult? Function( bool show)?  toggleDeviceFrame,TResult? Function( double ratio)?  updateImageSizeRatio,TResult? Function( Color color)?  updateTextColor,TResult? Function( ScreenshotFontFamily font)?  updateScreenshotFont,TResult? Function( bool value)?  togglePreviewTablet,TResult? Function( TextVerticalPlacement placement)?  updateTextPlacement,}) {final _that = this;
 switch (_that) {
 case _SelectStore() when selectStore != null:
 return selectStore(_that.store);case _SelectTemplate() when selectTemplate != null:
 return selectTemplate(_that.index);case _AddImages() when addImages != null:
 return addImages(_that.paths,_that.webImageBytes,_that.webImageDisplayNames);case _RemoveImage() when removeImage != null:
 return removeImage(_that.index);case _UpdateText() when updateText != null:
-return updateText(_that.index,_that.text);case _UpdateBackground() when updateBackground != null:
+return updateText(_that.index,_that.text);case _UpdateTitle() when updateTitle != null:
+return updateTitle(_that.text);case _UpdateBackground() when updateBackground != null:
 return updateBackground(_that.background);case _SelectImage() when selectImage != null:
 return selectImage(_that.index);case _ReorderImages() when reorderImages != null:
 return reorderImages(_that.oldIndex,_that.newIndex);case _UpdateTextScale() when updateTextScale != null:
 return updateTextScale(_that.scale);case _ToggleDeviceFrame() when toggleDeviceFrame != null:
 return toggleDeviceFrame(_that.show);case _UpdateImageSizeRatio() when updateImageSizeRatio != null:
 return updateImageSizeRatio(_that.ratio);case _UpdateTextColor() when updateTextColor != null:
-return updateTextColor(_that.color);case _TogglePreviewTablet() when togglePreviewTablet != null:
-return togglePreviewTablet(_that.value);case _:
+return updateTextColor(_that.color);case _UpdateScreenshotFont() when updateScreenshotFont != null:
+return updateScreenshotFont(_that.font);case _TogglePreviewTablet() when togglePreviewTablet != null:
+return togglePreviewTablet(_that.value);case _UpdateTextPlacement() when updateTextPlacement != null:
+return updateTextPlacement(_that.placement);case _:
   return null;
 
 }
@@ -594,6 +612,72 @@ class __$UpdateTextCopyWithImpl<$Res>
   return _then(_UpdateText(
 index: null == index ? _self.index : index // ignore: cast_nullable_to_non_nullable
 as int,text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class _UpdateTitle implements EditorEvent {
+  const _UpdateTitle(this.text);
+  
+
+ final  String text;
+
+/// Create a copy of EditorEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$UpdateTitleCopyWith<_UpdateTitle> get copyWith => __$UpdateTitleCopyWithImpl<_UpdateTitle>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateTitle&&(identical(other.text, text) || other.text == text));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,text);
+
+@override
+String toString() {
+  return 'EditorEvent.updateTitle(text: $text)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$UpdateTitleCopyWith<$Res> implements $EditorEventCopyWith<$Res> {
+  factory _$UpdateTitleCopyWith(_UpdateTitle value, $Res Function(_UpdateTitle) _then) = __$UpdateTitleCopyWithImpl;
+@useResult
+$Res call({
+ String text
+});
+
+
+
+
+}
+/// @nodoc
+class __$UpdateTitleCopyWithImpl<$Res>
+    implements _$UpdateTitleCopyWith<$Res> {
+  __$UpdateTitleCopyWithImpl(this._self, this._then);
+
+  final _UpdateTitle _self;
+  final $Res Function(_UpdateTitle) _then;
+
+/// Create a copy of EditorEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? text = null,}) {
+  return _then(_UpdateTitle(
+null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -1068,6 +1152,72 @@ as Color,
 /// @nodoc
 
 
+class _UpdateScreenshotFont implements EditorEvent {
+  const _UpdateScreenshotFont(this.font);
+  
+
+ final  ScreenshotFontFamily font;
+
+/// Create a copy of EditorEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$UpdateScreenshotFontCopyWith<_UpdateScreenshotFont> get copyWith => __$UpdateScreenshotFontCopyWithImpl<_UpdateScreenshotFont>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateScreenshotFont&&(identical(other.font, font) || other.font == font));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,font);
+
+@override
+String toString() {
+  return 'EditorEvent.updateScreenshotFont(font: $font)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$UpdateScreenshotFontCopyWith<$Res> implements $EditorEventCopyWith<$Res> {
+  factory _$UpdateScreenshotFontCopyWith(_UpdateScreenshotFont value, $Res Function(_UpdateScreenshotFont) _then) = __$UpdateScreenshotFontCopyWithImpl;
+@useResult
+$Res call({
+ ScreenshotFontFamily font
+});
+
+
+
+
+}
+/// @nodoc
+class __$UpdateScreenshotFontCopyWithImpl<$Res>
+    implements _$UpdateScreenshotFontCopyWith<$Res> {
+  __$UpdateScreenshotFontCopyWithImpl(this._self, this._then);
+
+  final _UpdateScreenshotFont _self;
+  final $Res Function(_UpdateScreenshotFont) _then;
+
+/// Create a copy of EditorEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? font = null,}) {
+  return _then(_UpdateScreenshotFont(
+null == font ? _self.font : font // ignore: cast_nullable_to_non_nullable
+as ScreenshotFontFamily,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
 class _TogglePreviewTablet implements EditorEvent {
   const _TogglePreviewTablet(this.value);
   
@@ -1132,9 +1282,75 @@ as bool,
 }
 
 /// @nodoc
+
+
+class _UpdateTextPlacement implements EditorEvent {
+  const _UpdateTextPlacement(this.placement);
+  
+
+ final  TextVerticalPlacement placement;
+
+/// Create a copy of EditorEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$UpdateTextPlacementCopyWith<_UpdateTextPlacement> get copyWith => __$UpdateTextPlacementCopyWithImpl<_UpdateTextPlacement>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateTextPlacement&&(identical(other.placement, placement) || other.placement == placement));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,placement);
+
+@override
+String toString() {
+  return 'EditorEvent.updateTextPlacement(placement: $placement)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$UpdateTextPlacementCopyWith<$Res> implements $EditorEventCopyWith<$Res> {
+  factory _$UpdateTextPlacementCopyWith(_UpdateTextPlacement value, $Res Function(_UpdateTextPlacement) _then) = __$UpdateTextPlacementCopyWithImpl;
+@useResult
+$Res call({
+ TextVerticalPlacement placement
+});
+
+
+
+
+}
+/// @nodoc
+class __$UpdateTextPlacementCopyWithImpl<$Res>
+    implements _$UpdateTextPlacementCopyWith<$Res> {
+  __$UpdateTextPlacementCopyWithImpl(this._self, this._then);
+
+  final _UpdateTextPlacement _self;
+  final $Res Function(_UpdateTextPlacement) _then;
+
+/// Create a copy of EditorEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? placement = null,}) {
+  return _then(_UpdateTextPlacement(
+null == placement ? _self.placement : placement // ignore: cast_nullable_to_non_nullable
+as TextVerticalPlacement,
+  ));
+}
+
+
+}
+
+/// @nodoc
 mixin _$EditorState {
 
- StoreType get storeType; int get selectedTemplateIndex; List<String> get imagePaths; Map<String, Uint8List> get webImageBytes; Map<String, String> get webImageDisplayNames; Map<String, List<String>> get textsPerImage; BackgroundConfig get background; int get selectedImageIndex; double get textScale; bool get showDeviceFrame; double get imageSizeRatio; Color get textColor; bool get previewTablet;
+ StoreType get storeType; int get selectedTemplateIndex; List<String> get imagePaths; Map<String, Uint8List> get webImageBytes; Map<String, String> get webImageDisplayNames; Map<String, List<String>> get textsPerImage; BackgroundConfig get background; int get selectedImageIndex; double get textScale; bool get showDeviceFrame; double get imageSizeRatio; Color get textColor; ScreenshotFontFamily get screenshotFont; bool get previewTablet; Map<String, TextVerticalPlacement> get textPlacementPerImage;
 /// Create a copy of EditorState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1145,16 +1361,16 @@ $EditorStateCopyWith<EditorState> get copyWith => _$EditorStateCopyWithImpl<Edit
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EditorState&&(identical(other.storeType, storeType) || other.storeType == storeType)&&(identical(other.selectedTemplateIndex, selectedTemplateIndex) || other.selectedTemplateIndex == selectedTemplateIndex)&&const DeepCollectionEquality().equals(other.imagePaths, imagePaths)&&const DeepCollectionEquality().equals(other.webImageBytes, webImageBytes)&&const DeepCollectionEquality().equals(other.webImageDisplayNames, webImageDisplayNames)&&const DeepCollectionEquality().equals(other.textsPerImage, textsPerImage)&&(identical(other.background, background) || other.background == background)&&(identical(other.selectedImageIndex, selectedImageIndex) || other.selectedImageIndex == selectedImageIndex)&&(identical(other.textScale, textScale) || other.textScale == textScale)&&(identical(other.showDeviceFrame, showDeviceFrame) || other.showDeviceFrame == showDeviceFrame)&&(identical(other.imageSizeRatio, imageSizeRatio) || other.imageSizeRatio == imageSizeRatio)&&(identical(other.textColor, textColor) || other.textColor == textColor)&&(identical(other.previewTablet, previewTablet) || other.previewTablet == previewTablet));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EditorState&&(identical(other.storeType, storeType) || other.storeType == storeType)&&(identical(other.selectedTemplateIndex, selectedTemplateIndex) || other.selectedTemplateIndex == selectedTemplateIndex)&&const DeepCollectionEquality().equals(other.imagePaths, imagePaths)&&const DeepCollectionEquality().equals(other.webImageBytes, webImageBytes)&&const DeepCollectionEquality().equals(other.webImageDisplayNames, webImageDisplayNames)&&const DeepCollectionEquality().equals(other.textsPerImage, textsPerImage)&&(identical(other.background, background) || other.background == background)&&(identical(other.selectedImageIndex, selectedImageIndex) || other.selectedImageIndex == selectedImageIndex)&&(identical(other.textScale, textScale) || other.textScale == textScale)&&(identical(other.showDeviceFrame, showDeviceFrame) || other.showDeviceFrame == showDeviceFrame)&&(identical(other.imageSizeRatio, imageSizeRatio) || other.imageSizeRatio == imageSizeRatio)&&(identical(other.textColor, textColor) || other.textColor == textColor)&&(identical(other.screenshotFont, screenshotFont) || other.screenshotFont == screenshotFont)&&(identical(other.previewTablet, previewTablet) || other.previewTablet == previewTablet)&&const DeepCollectionEquality().equals(other.textPlacementPerImage, textPlacementPerImage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,storeType,selectedTemplateIndex,const DeepCollectionEquality().hash(imagePaths),const DeepCollectionEquality().hash(webImageBytes),const DeepCollectionEquality().hash(webImageDisplayNames),const DeepCollectionEquality().hash(textsPerImage),background,selectedImageIndex,textScale,showDeviceFrame,imageSizeRatio,textColor,previewTablet);
+int get hashCode => Object.hash(runtimeType,storeType,selectedTemplateIndex,const DeepCollectionEquality().hash(imagePaths),const DeepCollectionEquality().hash(webImageBytes),const DeepCollectionEquality().hash(webImageDisplayNames),const DeepCollectionEquality().hash(textsPerImage),background,selectedImageIndex,textScale,showDeviceFrame,imageSizeRatio,textColor,screenshotFont,previewTablet,const DeepCollectionEquality().hash(textPlacementPerImage));
 
 @override
 String toString() {
-  return 'EditorState(storeType: $storeType, selectedTemplateIndex: $selectedTemplateIndex, imagePaths: $imagePaths, webImageBytes: $webImageBytes, webImageDisplayNames: $webImageDisplayNames, textsPerImage: $textsPerImage, background: $background, selectedImageIndex: $selectedImageIndex, textScale: $textScale, showDeviceFrame: $showDeviceFrame, imageSizeRatio: $imageSizeRatio, textColor: $textColor, previewTablet: $previewTablet)';
+  return 'EditorState(storeType: $storeType, selectedTemplateIndex: $selectedTemplateIndex, imagePaths: $imagePaths, webImageBytes: $webImageBytes, webImageDisplayNames: $webImageDisplayNames, textsPerImage: $textsPerImage, background: $background, selectedImageIndex: $selectedImageIndex, textScale: $textScale, showDeviceFrame: $showDeviceFrame, imageSizeRatio: $imageSizeRatio, textColor: $textColor, screenshotFont: $screenshotFont, previewTablet: $previewTablet, textPlacementPerImage: $textPlacementPerImage)';
 }
 
 
@@ -1165,7 +1381,7 @@ abstract mixin class $EditorStateCopyWith<$Res>  {
   factory $EditorStateCopyWith(EditorState value, $Res Function(EditorState) _then) = _$EditorStateCopyWithImpl;
 @useResult
 $Res call({
- StoreType storeType, int selectedTemplateIndex, List<String> imagePaths, Map<String, Uint8List> webImageBytes, Map<String, String> webImageDisplayNames, Map<String, List<String>> textsPerImage, BackgroundConfig background, int selectedImageIndex, double textScale, bool showDeviceFrame, double imageSizeRatio, Color textColor, bool previewTablet
+ StoreType storeType, int selectedTemplateIndex, List<String> imagePaths, Map<String, Uint8List> webImageBytes, Map<String, String> webImageDisplayNames, Map<String, List<String>> textsPerImage, BackgroundConfig background, int selectedImageIndex, double textScale, bool showDeviceFrame, double imageSizeRatio, Color textColor, ScreenshotFontFamily screenshotFont, bool previewTablet, Map<String, TextVerticalPlacement> textPlacementPerImage
 });
 
 
@@ -1182,7 +1398,7 @@ class _$EditorStateCopyWithImpl<$Res>
 
 /// Create a copy of EditorState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? storeType = null,Object? selectedTemplateIndex = null,Object? imagePaths = null,Object? webImageBytes = null,Object? webImageDisplayNames = null,Object? textsPerImage = null,Object? background = null,Object? selectedImageIndex = null,Object? textScale = null,Object? showDeviceFrame = null,Object? imageSizeRatio = null,Object? textColor = null,Object? previewTablet = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? storeType = null,Object? selectedTemplateIndex = null,Object? imagePaths = null,Object? webImageBytes = null,Object? webImageDisplayNames = null,Object? textsPerImage = null,Object? background = null,Object? selectedImageIndex = null,Object? textScale = null,Object? showDeviceFrame = null,Object? imageSizeRatio = null,Object? textColor = null,Object? screenshotFont = null,Object? previewTablet = null,Object? textPlacementPerImage = null,}) {
   return _then(_self.copyWith(
 storeType: null == storeType ? _self.storeType : storeType // ignore: cast_nullable_to_non_nullable
 as StoreType,selectedTemplateIndex: null == selectedTemplateIndex ? _self.selectedTemplateIndex : selectedTemplateIndex // ignore: cast_nullable_to_non_nullable
@@ -1196,8 +1412,10 @@ as int,textScale: null == textScale ? _self.textScale : textScale // ignore: cas
 as double,showDeviceFrame: null == showDeviceFrame ? _self.showDeviceFrame : showDeviceFrame // ignore: cast_nullable_to_non_nullable
 as bool,imageSizeRatio: null == imageSizeRatio ? _self.imageSizeRatio : imageSizeRatio // ignore: cast_nullable_to_non_nullable
 as double,textColor: null == textColor ? _self.textColor : textColor // ignore: cast_nullable_to_non_nullable
-as Color,previewTablet: null == previewTablet ? _self.previewTablet : previewTablet // ignore: cast_nullable_to_non_nullable
-as bool,
+as Color,screenshotFont: null == screenshotFont ? _self.screenshotFont : screenshotFont // ignore: cast_nullable_to_non_nullable
+as ScreenshotFontFamily,previewTablet: null == previewTablet ? _self.previewTablet : previewTablet // ignore: cast_nullable_to_non_nullable
+as bool,textPlacementPerImage: null == textPlacementPerImage ? _self.textPlacementPerImage : textPlacementPerImage // ignore: cast_nullable_to_non_nullable
+as Map<String, TextVerticalPlacement>,
   ));
 }
 
@@ -1279,10 +1497,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( StoreType storeType,  int selectedTemplateIndex,  List<String> imagePaths,  Map<String, Uint8List> webImageBytes,  Map<String, String> webImageDisplayNames,  Map<String, List<String>> textsPerImage,  BackgroundConfig background,  int selectedImageIndex,  double textScale,  bool showDeviceFrame,  double imageSizeRatio,  Color textColor,  bool previewTablet)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( StoreType storeType,  int selectedTemplateIndex,  List<String> imagePaths,  Map<String, Uint8List> webImageBytes,  Map<String, String> webImageDisplayNames,  Map<String, List<String>> textsPerImage,  BackgroundConfig background,  int selectedImageIndex,  double textScale,  bool showDeviceFrame,  double imageSizeRatio,  Color textColor,  ScreenshotFontFamily screenshotFont,  bool previewTablet,  Map<String, TextVerticalPlacement> textPlacementPerImage)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EditorState() when $default != null:
-return $default(_that.storeType,_that.selectedTemplateIndex,_that.imagePaths,_that.webImageBytes,_that.webImageDisplayNames,_that.textsPerImage,_that.background,_that.selectedImageIndex,_that.textScale,_that.showDeviceFrame,_that.imageSizeRatio,_that.textColor,_that.previewTablet);case _:
+return $default(_that.storeType,_that.selectedTemplateIndex,_that.imagePaths,_that.webImageBytes,_that.webImageDisplayNames,_that.textsPerImage,_that.background,_that.selectedImageIndex,_that.textScale,_that.showDeviceFrame,_that.imageSizeRatio,_that.textColor,_that.screenshotFont,_that.previewTablet,_that.textPlacementPerImage);case _:
   return orElse();
 
 }
@@ -1300,10 +1518,10 @@ return $default(_that.storeType,_that.selectedTemplateIndex,_that.imagePaths,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( StoreType storeType,  int selectedTemplateIndex,  List<String> imagePaths,  Map<String, Uint8List> webImageBytes,  Map<String, String> webImageDisplayNames,  Map<String, List<String>> textsPerImage,  BackgroundConfig background,  int selectedImageIndex,  double textScale,  bool showDeviceFrame,  double imageSizeRatio,  Color textColor,  bool previewTablet)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( StoreType storeType,  int selectedTemplateIndex,  List<String> imagePaths,  Map<String, Uint8List> webImageBytes,  Map<String, String> webImageDisplayNames,  Map<String, List<String>> textsPerImage,  BackgroundConfig background,  int selectedImageIndex,  double textScale,  bool showDeviceFrame,  double imageSizeRatio,  Color textColor,  ScreenshotFontFamily screenshotFont,  bool previewTablet,  Map<String, TextVerticalPlacement> textPlacementPerImage)  $default,) {final _that = this;
 switch (_that) {
 case _EditorState():
-return $default(_that.storeType,_that.selectedTemplateIndex,_that.imagePaths,_that.webImageBytes,_that.webImageDisplayNames,_that.textsPerImage,_that.background,_that.selectedImageIndex,_that.textScale,_that.showDeviceFrame,_that.imageSizeRatio,_that.textColor,_that.previewTablet);}
+return $default(_that.storeType,_that.selectedTemplateIndex,_that.imagePaths,_that.webImageBytes,_that.webImageDisplayNames,_that.textsPerImage,_that.background,_that.selectedImageIndex,_that.textScale,_that.showDeviceFrame,_that.imageSizeRatio,_that.textColor,_that.screenshotFont,_that.previewTablet,_that.textPlacementPerImage);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -1317,10 +1535,10 @@ return $default(_that.storeType,_that.selectedTemplateIndex,_that.imagePaths,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( StoreType storeType,  int selectedTemplateIndex,  List<String> imagePaths,  Map<String, Uint8List> webImageBytes,  Map<String, String> webImageDisplayNames,  Map<String, List<String>> textsPerImage,  BackgroundConfig background,  int selectedImageIndex,  double textScale,  bool showDeviceFrame,  double imageSizeRatio,  Color textColor,  bool previewTablet)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( StoreType storeType,  int selectedTemplateIndex,  List<String> imagePaths,  Map<String, Uint8List> webImageBytes,  Map<String, String> webImageDisplayNames,  Map<String, List<String>> textsPerImage,  BackgroundConfig background,  int selectedImageIndex,  double textScale,  bool showDeviceFrame,  double imageSizeRatio,  Color textColor,  ScreenshotFontFamily screenshotFont,  bool previewTablet,  Map<String, TextVerticalPlacement> textPlacementPerImage)?  $default,) {final _that = this;
 switch (_that) {
 case _EditorState() when $default != null:
-return $default(_that.storeType,_that.selectedTemplateIndex,_that.imagePaths,_that.webImageBytes,_that.webImageDisplayNames,_that.textsPerImage,_that.background,_that.selectedImageIndex,_that.textScale,_that.showDeviceFrame,_that.imageSizeRatio,_that.textColor,_that.previewTablet);case _:
+return $default(_that.storeType,_that.selectedTemplateIndex,_that.imagePaths,_that.webImageBytes,_that.webImageDisplayNames,_that.textsPerImage,_that.background,_that.selectedImageIndex,_that.textScale,_that.showDeviceFrame,_that.imageSizeRatio,_that.textColor,_that.screenshotFont,_that.previewTablet,_that.textPlacementPerImage);case _:
   return null;
 
 }
@@ -1332,7 +1550,7 @@ return $default(_that.storeType,_that.selectedTemplateIndex,_that.imagePaths,_th
 
 
 class _EditorState extends EditorState {
-  const _EditorState({this.storeType = StoreType.appStore, this.selectedTemplateIndex = 0, final  List<String> imagePaths = const [], final  Map<String, Uint8List> webImageBytes = const {}, final  Map<String, String> webImageDisplayNames = const {}, final  Map<String, List<String>> textsPerImage = const {}, this.background = const BackgroundConfig(gradientColors: [Color(0xFF667EEA), Color(0xFF764BA2)]), this.selectedImageIndex = 0, this.textScale = 1.0, this.showDeviceFrame = false, this.imageSizeRatio = 0.80, this.textColor = const Color(0xFFFFFFFF), this.previewTablet = false}): _imagePaths = imagePaths,_webImageBytes = webImageBytes,_webImageDisplayNames = webImageDisplayNames,_textsPerImage = textsPerImage,super._();
+  const _EditorState({this.storeType = StoreType.appStore, this.selectedTemplateIndex = 0, final  List<String> imagePaths = const [], final  Map<String, Uint8List> webImageBytes = const {}, final  Map<String, String> webImageDisplayNames = const {}, final  Map<String, List<String>> textsPerImage = const {}, this.background = const BackgroundConfig(gradientColors: [Color(0xFF667EEA), Color(0xFF764BA2)]), this.selectedImageIndex = 0, this.textScale = 1.0, this.showDeviceFrame = false, this.imageSizeRatio = 0.80, this.textColor = const Color(0xFFFFFFFF), this.screenshotFont = ScreenshotFontFamily.nunito, this.previewTablet = false, final  Map<String, TextVerticalPlacement> textPlacementPerImage = const {}}): _imagePaths = imagePaths,_webImageBytes = webImageBytes,_webImageDisplayNames = webImageDisplayNames,_textsPerImage = textsPerImage,_textPlacementPerImage = textPlacementPerImage,super._();
   
 
 @override@JsonKey() final  StoreType storeType;
@@ -1371,7 +1589,15 @@ class _EditorState extends EditorState {
 @override@JsonKey() final  bool showDeviceFrame;
 @override@JsonKey() final  double imageSizeRatio;
 @override@JsonKey() final  Color textColor;
+@override@JsonKey() final  ScreenshotFontFamily screenshotFont;
 @override@JsonKey() final  bool previewTablet;
+ final  Map<String, TextVerticalPlacement> _textPlacementPerImage;
+@override@JsonKey() Map<String, TextVerticalPlacement> get textPlacementPerImage {
+  if (_textPlacementPerImage is EqualUnmodifiableMapView) return _textPlacementPerImage;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_textPlacementPerImage);
+}
+
 
 /// Create a copy of EditorState
 /// with the given fields replaced by the non-null parameter values.
@@ -1383,16 +1609,16 @@ _$EditorStateCopyWith<_EditorState> get copyWith => __$EditorStateCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EditorState&&(identical(other.storeType, storeType) || other.storeType == storeType)&&(identical(other.selectedTemplateIndex, selectedTemplateIndex) || other.selectedTemplateIndex == selectedTemplateIndex)&&const DeepCollectionEquality().equals(other._imagePaths, _imagePaths)&&const DeepCollectionEquality().equals(other._webImageBytes, _webImageBytes)&&const DeepCollectionEquality().equals(other._webImageDisplayNames, _webImageDisplayNames)&&const DeepCollectionEquality().equals(other._textsPerImage, _textsPerImage)&&(identical(other.background, background) || other.background == background)&&(identical(other.selectedImageIndex, selectedImageIndex) || other.selectedImageIndex == selectedImageIndex)&&(identical(other.textScale, textScale) || other.textScale == textScale)&&(identical(other.showDeviceFrame, showDeviceFrame) || other.showDeviceFrame == showDeviceFrame)&&(identical(other.imageSizeRatio, imageSizeRatio) || other.imageSizeRatio == imageSizeRatio)&&(identical(other.textColor, textColor) || other.textColor == textColor)&&(identical(other.previewTablet, previewTablet) || other.previewTablet == previewTablet));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EditorState&&(identical(other.storeType, storeType) || other.storeType == storeType)&&(identical(other.selectedTemplateIndex, selectedTemplateIndex) || other.selectedTemplateIndex == selectedTemplateIndex)&&const DeepCollectionEquality().equals(other._imagePaths, _imagePaths)&&const DeepCollectionEquality().equals(other._webImageBytes, _webImageBytes)&&const DeepCollectionEquality().equals(other._webImageDisplayNames, _webImageDisplayNames)&&const DeepCollectionEquality().equals(other._textsPerImage, _textsPerImage)&&(identical(other.background, background) || other.background == background)&&(identical(other.selectedImageIndex, selectedImageIndex) || other.selectedImageIndex == selectedImageIndex)&&(identical(other.textScale, textScale) || other.textScale == textScale)&&(identical(other.showDeviceFrame, showDeviceFrame) || other.showDeviceFrame == showDeviceFrame)&&(identical(other.imageSizeRatio, imageSizeRatio) || other.imageSizeRatio == imageSizeRatio)&&(identical(other.textColor, textColor) || other.textColor == textColor)&&(identical(other.screenshotFont, screenshotFont) || other.screenshotFont == screenshotFont)&&(identical(other.previewTablet, previewTablet) || other.previewTablet == previewTablet)&&const DeepCollectionEquality().equals(other._textPlacementPerImage, _textPlacementPerImage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,storeType,selectedTemplateIndex,const DeepCollectionEquality().hash(_imagePaths),const DeepCollectionEquality().hash(_webImageBytes),const DeepCollectionEquality().hash(_webImageDisplayNames),const DeepCollectionEquality().hash(_textsPerImage),background,selectedImageIndex,textScale,showDeviceFrame,imageSizeRatio,textColor,previewTablet);
+int get hashCode => Object.hash(runtimeType,storeType,selectedTemplateIndex,const DeepCollectionEquality().hash(_imagePaths),const DeepCollectionEquality().hash(_webImageBytes),const DeepCollectionEquality().hash(_webImageDisplayNames),const DeepCollectionEquality().hash(_textsPerImage),background,selectedImageIndex,textScale,showDeviceFrame,imageSizeRatio,textColor,screenshotFont,previewTablet,const DeepCollectionEquality().hash(_textPlacementPerImage));
 
 @override
 String toString() {
-  return 'EditorState(storeType: $storeType, selectedTemplateIndex: $selectedTemplateIndex, imagePaths: $imagePaths, webImageBytes: $webImageBytes, webImageDisplayNames: $webImageDisplayNames, textsPerImage: $textsPerImage, background: $background, selectedImageIndex: $selectedImageIndex, textScale: $textScale, showDeviceFrame: $showDeviceFrame, imageSizeRatio: $imageSizeRatio, textColor: $textColor, previewTablet: $previewTablet)';
+  return 'EditorState(storeType: $storeType, selectedTemplateIndex: $selectedTemplateIndex, imagePaths: $imagePaths, webImageBytes: $webImageBytes, webImageDisplayNames: $webImageDisplayNames, textsPerImage: $textsPerImage, background: $background, selectedImageIndex: $selectedImageIndex, textScale: $textScale, showDeviceFrame: $showDeviceFrame, imageSizeRatio: $imageSizeRatio, textColor: $textColor, screenshotFont: $screenshotFont, previewTablet: $previewTablet, textPlacementPerImage: $textPlacementPerImage)';
 }
 
 
@@ -1403,7 +1629,7 @@ abstract mixin class _$EditorStateCopyWith<$Res> implements $EditorStateCopyWith
   factory _$EditorStateCopyWith(_EditorState value, $Res Function(_EditorState) _then) = __$EditorStateCopyWithImpl;
 @override @useResult
 $Res call({
- StoreType storeType, int selectedTemplateIndex, List<String> imagePaths, Map<String, Uint8List> webImageBytes, Map<String, String> webImageDisplayNames, Map<String, List<String>> textsPerImage, BackgroundConfig background, int selectedImageIndex, double textScale, bool showDeviceFrame, double imageSizeRatio, Color textColor, bool previewTablet
+ StoreType storeType, int selectedTemplateIndex, List<String> imagePaths, Map<String, Uint8List> webImageBytes, Map<String, String> webImageDisplayNames, Map<String, List<String>> textsPerImage, BackgroundConfig background, int selectedImageIndex, double textScale, bool showDeviceFrame, double imageSizeRatio, Color textColor, ScreenshotFontFamily screenshotFont, bool previewTablet, Map<String, TextVerticalPlacement> textPlacementPerImage
 });
 
 
@@ -1420,7 +1646,7 @@ class __$EditorStateCopyWithImpl<$Res>
 
 /// Create a copy of EditorState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? storeType = null,Object? selectedTemplateIndex = null,Object? imagePaths = null,Object? webImageBytes = null,Object? webImageDisplayNames = null,Object? textsPerImage = null,Object? background = null,Object? selectedImageIndex = null,Object? textScale = null,Object? showDeviceFrame = null,Object? imageSizeRatio = null,Object? textColor = null,Object? previewTablet = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? storeType = null,Object? selectedTemplateIndex = null,Object? imagePaths = null,Object? webImageBytes = null,Object? webImageDisplayNames = null,Object? textsPerImage = null,Object? background = null,Object? selectedImageIndex = null,Object? textScale = null,Object? showDeviceFrame = null,Object? imageSizeRatio = null,Object? textColor = null,Object? screenshotFont = null,Object? previewTablet = null,Object? textPlacementPerImage = null,}) {
   return _then(_EditorState(
 storeType: null == storeType ? _self.storeType : storeType // ignore: cast_nullable_to_non_nullable
 as StoreType,selectedTemplateIndex: null == selectedTemplateIndex ? _self.selectedTemplateIndex : selectedTemplateIndex // ignore: cast_nullable_to_non_nullable
@@ -1434,8 +1660,10 @@ as int,textScale: null == textScale ? _self.textScale : textScale // ignore: cas
 as double,showDeviceFrame: null == showDeviceFrame ? _self.showDeviceFrame : showDeviceFrame // ignore: cast_nullable_to_non_nullable
 as bool,imageSizeRatio: null == imageSizeRatio ? _self.imageSizeRatio : imageSizeRatio // ignore: cast_nullable_to_non_nullable
 as double,textColor: null == textColor ? _self.textColor : textColor // ignore: cast_nullable_to_non_nullable
-as Color,previewTablet: null == previewTablet ? _self.previewTablet : previewTablet // ignore: cast_nullable_to_non_nullable
-as bool,
+as Color,screenshotFont: null == screenshotFont ? _self.screenshotFont : screenshotFont // ignore: cast_nullable_to_non_nullable
+as ScreenshotFontFamily,previewTablet: null == previewTablet ? _self.previewTablet : previewTablet // ignore: cast_nullable_to_non_nullable
+as bool,textPlacementPerImage: null == textPlacementPerImage ? _self._textPlacementPerImage : textPlacementPerImage // ignore: cast_nullable_to_non_nullable
+as Map<String, TextVerticalPlacement>,
   ));
 }
 

@@ -9,6 +9,8 @@ import '../../../../core/extensions/theme_ext.dart';
 import '../../../../core/renderer/screenshot_renderer.dart';
 import '../../../../models/background_config.dart';
 import '../../../../models/export_config.dart';
+import '../../../../models/screenshot_font_family.dart';
+import '../../../../models/text_vertical_placement.dart';
 import '../../../../templates/base_template.dart';
 import '../../../../utils/image_utils.dart';
 import 'export_dialog_paths_stub.dart'
@@ -26,6 +28,8 @@ class ExportDialog extends StatefulWidget {
   final bool showDeviceFrame;
   final double imageSizeRatio;
   final Color textColor;
+  final ScreenshotFontFamily screenshotFont;
+  final Map<String, TextVerticalPlacement> textPlacementPerImage;
 
   const ExportDialog({
     super.key,
@@ -40,6 +44,8 @@ class ExportDialog extends StatefulWidget {
     this.showDeviceFrame = false,
     this.imageSizeRatio = 0.8,
     this.textColor = Colors.white,
+    this.screenshotFont = ScreenshotFontFamily.nunito,
+    this.textPlacementPerImage = const {},
   });
 
   static Future<void> show(
@@ -55,6 +61,8 @@ class ExportDialog extends StatefulWidget {
     bool showDeviceFrame = false,
     double imageSizeRatio = 0.8,
     Color textColor = Colors.white,
+    ScreenshotFontFamily screenshotFont = ScreenshotFontFamily.nunito,
+    Map<String, TextVerticalPlacement> textPlacementPerImage = const {},
   }) {
     return showDialog(
       context: context,
@@ -71,6 +79,8 @@ class ExportDialog extends StatefulWidget {
         showDeviceFrame: showDeviceFrame,
         imageSizeRatio: imageSizeRatio,
         textColor: textColor,
+        screenshotFont: screenshotFont,
+        textPlacementPerImage: textPlacementPerImage,
       ),
     );
   }
@@ -138,7 +148,9 @@ class _ExportDialogState extends State<ExportDialog> {
         deviceFrame: deviceFrame,
         imageSizeRatio: widget.imageSizeRatio,
         textColor: widget.textColor,
+        screenshotFont: widget.screenshotFont,
         webImageBytes: widget.webImageBytes,
+        textPlacementPerImage: widget.textPlacementPerImage,
         onProgress: (current, total) {
           if (mounted) {
             setState(() {

@@ -5,24 +5,20 @@ import '../../../../core/extensions/theme_ext.dart';
 import 'color_picker_dialog.dart';
 
 class AppearanceControls extends StatelessWidget {
-  final double textScale;
   final bool showDeviceFrame;
   final DeviceFrameStyle deviceFrameStyle;
   final double imageSizeRatio;
   final Color textColor;
-  final ValueChanged<double> onTextScaleChanged;
   final ValueChanged<bool> onDeviceFrameToggled;
   final ValueChanged<double> onImageSizeRatioChanged;
   final ValueChanged<Color> onTextColorChanged;
 
   const AppearanceControls({
     super.key,
-    required this.textScale,
     required this.showDeviceFrame,
     required this.deviceFrameStyle,
     required this.imageSizeRatio,
     required this.textColor,
-    required this.onTextScaleChanged,
     required this.onDeviceFrameToggled,
     required this.onImageSizeRatioChanged,
     required this.onTextColorChanged,
@@ -51,22 +47,6 @@ class AppearanceControls extends StatelessWidget {
         const SizedBox(height: 10),
 
         _buildTextColorSection(context, appColors, primary),
-        const SizedBox(height: 12),
-
-        _buildSliderRow(
-          context: context,
-          label: 'Text Size',
-          value: textScale,
-          valueLabel: '${(textScale * 100).round()}%',
-          min: 0.5,
-          max: 2.0,
-          divisions: 15,
-          iconStart: Icons.text_decrease,
-          iconEnd: Icons.text_increase,
-          primary: primary,
-          appColors: appColors,
-          onChanged: onTextScaleChanged,
-        ),
         const SizedBox(height: 12),
 
         _buildSliderRow(

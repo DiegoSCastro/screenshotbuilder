@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/extensions/theme_ext.dart';
 import '../../../../models/background_config.dart';
+import '../../../../models/screenshot_font_family.dart';
+import '../../../../models/text_vertical_placement.dart';
 import '../../../../templates/template_registry.dart';
 
 class TemplateSelector extends StatelessWidget {
@@ -111,6 +113,8 @@ class _TemplateThumbnail extends StatelessWidget {
         texts: ['Title', 'Subtitle'],
         imagePath: null,
         background: bg,
+        screenshotFont: ScreenshotFontFamily.nunito,
+        textVerticalPlacement: TextVerticalPlacement.aboveImage,
       ),
     );
   }

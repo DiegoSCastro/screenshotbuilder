@@ -7,6 +7,8 @@ import '../../../../common/widgets/device_frame.dart';
 import '../../../../core/extensions/theme_ext.dart';
 import '../../../../models/background_config.dart';
 import '../../../../models/export_config.dart';
+import '../../../../models/screenshot_font_family.dart';
+import '../../../../models/text_vertical_placement.dart';
 import '../../../../templates/base_template.dart';
 import '../../../../utils/image_utils.dart';
 
@@ -16,6 +18,7 @@ class PreviewPanel extends StatefulWidget {
   final Map<String, Uint8List> webImageBytes;
   final Map<String, String> webImageDisplayNames;
   final Map<String, List<String>> textsPerImage;
+  final Map<String, TextVerticalPlacement> textPlacementPerImage;
   final int maxTexts;
   final int selectedIndex;
   final BackgroundConfig background;
@@ -24,6 +27,7 @@ class PreviewPanel extends StatefulWidget {
   final DeviceFrameStyle deviceFrame;
   final double imageSizeRatio;
   final Color textColor;
+  final ScreenshotFontFamily screenshotFont;
   final bool previewTablet;
   final ValueChanged<int> onSelect;
   final ValueChanged<bool> onPreviewTabletChanged;
@@ -35,6 +39,7 @@ class PreviewPanel extends StatefulWidget {
     this.webImageBytes = const {},
     this.webImageDisplayNames = const {},
     required this.textsPerImage,
+    this.textPlacementPerImage = const {},
     required this.maxTexts,
     required this.selectedIndex,
     required this.background,
@@ -43,6 +48,7 @@ class PreviewPanel extends StatefulWidget {
     this.deviceFrame = DeviceFrameStyle.none,
     this.imageSizeRatio = 0.8,
     this.textColor = Colors.white,
+    this.screenshotFont = ScreenshotFontFamily.nunito,
     this.previewTablet = false,
     required this.onSelect,
     required this.onPreviewTabletChanged,
@@ -416,7 +422,12 @@ class _PreviewPanelState extends State<PreviewPanel> {
               deviceFrame: widget.deviceFrame,
               imageSizeRatio: widget.imageSizeRatio,
               textColor: widget.textColor,
+              screenshotFont: widget.screenshotFont,
               isTablet: widget.previewTablet,
+              textVerticalPlacement: imagePath == null
+                  ? TextVerticalPlacement.aboveImage
+                  : (widget.textPlacementPerImage[imagePath] ??
+                      TextVerticalPlacement.aboveImage),
             ),
           ),
           if (index >= 0)

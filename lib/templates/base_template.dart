@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 
 import '../common/widgets/device_frame.dart';
 import '../models/background_config.dart';
+import '../models/screenshot_font_family.dart';
 import '../models/template_model.dart';
+import '../models/text_vertical_placement.dart';
 import 'template_file_image.dart';
 
 abstract class BaseTemplate {
@@ -20,7 +22,10 @@ abstract class BaseTemplate {
     DeviceFrameStyle deviceFrame = DeviceFrameStyle.none,
     double imageSizeRatio = 0.8,
     Color textColor = Colors.white,
+    ScreenshotFontFamily screenshotFont = ScreenshotFontFamily.nunito,
     bool isTablet = false,
+    TextVerticalPlacement textVerticalPlacement =
+        TextVerticalPlacement.aboveImage,
   });
 
   Decoration buildBackgroundDecoration(BackgroundConfig background) {

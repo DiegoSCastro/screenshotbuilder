@@ -20,7 +20,9 @@ sealed class EditorState with _$EditorState {
     @Default(false) bool showDeviceFrame,
     @Default(0.80) double imageSizeRatio,
     @Default(Color(0xFFFFFFFF)) Color textColor,
+    @Default(ScreenshotFontFamily.nunito) ScreenshotFontFamily screenshotFont,
     @Default(false) bool previewTablet,
+    @Default({}) Map<String, TextVerticalPlacement> textPlacementPerImage,
   }) = _EditorState;
 
   factory EditorState.initial() => const EditorState();
@@ -51,5 +53,10 @@ sealed class EditorState with _$EditorState {
     final path = selectedImagePath;
     if (path == null) return List.filled(maxTexts, '');
     return textsForImage(path, maxTexts);
+  }
+
+  TextVerticalPlacement textPlacementForImage(String imagePath) {
+    return textPlacementPerImage[imagePath] ??
+        TextVerticalPlacement.aboveImage;
   }
 }

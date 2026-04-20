@@ -5,6 +5,7 @@ import '../../../../common/ui_utils/snack_bar.dart';
 import '../../../../core/extensions/theme_ext.dart';
 import '../../../../core/theme/theme_service.dart';
 import '../../../../models/export_config.dart';
+import '../../../../models/text_vertical_placement.dart';
 import '../../../../templates/template_registry.dart';
 import '../blocs/editor_bloc/editor_bloc.dart';
 import '../widgets/appearance_controls.dart';
@@ -96,6 +97,10 @@ class EditorScreen extends StatelessWidget {
     final template = TemplateRegistry.getByIndex(state.selectedTemplateIndex);
     final maxTexts = template.model.maxTexts;
     final currentTexts = state.currentTexts(maxTexts);
+    final path = state.selectedImagePath;
+    final placement = path != null
+        ? state.textPlacementForImage(path)
+        : TextVerticalPlacement.aboveImage;
 
     return Container(
       width: 280,
@@ -128,11 +133,20 @@ class EditorScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               TextEditorPanel(
-                texts: currentTexts,
-                maxTexts: maxTexts,
+                title: currentTexts.isNotEmpty ? currentTexts[0] : '',
                 selectedImagePath: state.selectedImagePath,
-                onTextChanged: (index, text) =>
-                    bloc.add(EditorEvent.updateText(index: index, text: text)),
+                screenshotFont: state.screenshotFont,
+                titleFontWeight:
+                    TemplateRegistry.titleFontWeightForTemplate(template),
+                textScale: state.textScale,
+                textVerticalPlacement: placement,
+                onTitleChanged: (t) => bloc.add(EditorEvent.updateTitle(t)),
+                onScreenshotFontChanged: (f) =>
+                    bloc.add(EditorEvent.updateScreenshotFont(f)),
+                onTextScaleChanged: (s) =>
+                    bloc.add(EditorEvent.updateTextScale(s)),
+                onTextVerticalPlacementChanged: (p) =>
+                    bloc.add(EditorEvent.updateTextPlacement(p)),
               ),
               const SizedBox(height: 20),
               BackgroundEditor(
@@ -141,13 +155,10 @@ class EditorScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               AppearanceControls(
-                textScale: state.textScale,
                 showDeviceFrame: state.showDeviceFrame,
                 deviceFrameStyle: state.deviceFrameStyle,
                 imageSizeRatio: state.imageSizeRatio,
                 textColor: state.textColor,
-                onTextScaleChanged: (scale) =>
-                    bloc.add(EditorEvent.updateTextScale(scale)),
                 onDeviceFrameToggled: (show) =>
                     bloc.add(EditorEvent.toggleDeviceFrame(show)),
                 onImageSizeRatioChanged: (ratio) =>
@@ -176,6 +187,7 @@ class EditorScreen extends StatelessWidget {
           webImageBytes: state.webImageBytes,
           webImageDisplayNames: state.webImageDisplayNames,
           textsPerImage: state.textsPerImage,
+          textPlacementPerImage: state.textPlacementPerImage,
           maxTexts: maxTexts,
           selectedIndex: state.selectedImageIndex,
           background: state.background,
@@ -184,6 +196,7 @@ class EditorScreen extends StatelessWidget {
           deviceFrame: state.deviceFrameStyle,
           imageSizeRatio: state.imageSizeRatio,
           textColor: state.textColor,
+          screenshotFont: state.screenshotFont,
           previewTablet: state.previewTablet,
           onSelect: (index) => bloc.add(EditorEvent.selectImage(index)),
           onPreviewTabletChanged: (value) =>
@@ -326,6 +339,8 @@ class EditorScreen extends StatelessWidget {
       showDeviceFrame: state.showDeviceFrame,
       imageSizeRatio: state.imageSizeRatio,
       textColor: state.textColor,
+      screenshotFont: state.screenshotFont,
+      textPlacementPerImage: state.textPlacementPerImage,
     );
   }
 }

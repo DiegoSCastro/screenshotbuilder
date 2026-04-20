@@ -14,6 +14,8 @@ class EditorEvent with _$EditorEvent {
     required int index,
     required String text,
   }) = _UpdateText;
+  /// Sets line 0 to [text] and clears all other lines for the selected image.
+  const factory EditorEvent.updateTitle(String text) = _UpdateTitle;
   const factory EditorEvent.updateBackground(BackgroundConfig background) =
       _UpdateBackground;
   const factory EditorEvent.selectImage(int index) = _SelectImage;
@@ -26,6 +28,11 @@ class EditorEvent with _$EditorEvent {
   const factory EditorEvent.updateImageSizeRatio(double ratio) =
       _UpdateImageSizeRatio;
   const factory EditorEvent.updateTextColor(Color color) = _UpdateTextColor;
+  const factory EditorEvent.updateScreenshotFont(ScreenshotFontFamily font) =
+      _UpdateScreenshotFont;
   const factory EditorEvent.togglePreviewTablet(bool value) =
       _TogglePreviewTablet;
+  const factory EditorEvent.updateTextPlacement(
+    TextVerticalPlacement placement,
+  ) = _UpdateTextPlacement;
 }
